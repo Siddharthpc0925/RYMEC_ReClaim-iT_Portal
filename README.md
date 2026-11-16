@@ -107,3 +107,25 @@ Detailed project documentation is available in the `/docs` directory:
 - [Use Cases & Walkthroughs (`/docs/USE_CASES.md`)](file:///C:/Users/V.NAGA%20PHANENDRA/.gemini/antigravity/scratch/rymec-reclaim-it/docs/USE_CASES.md)
 - [Data Flow Diagrams (`/docs/DATA_FLOW.md`)](file:///C:/Users/V.NAGA%20PHANENDRA/.gemini/antigravity/scratch/rymec-reclaim-it/docs/DATA_FLOW.md)
 - [Test Cases Matrix (`/docs/TEST_CASES.md`)](file:///C:/Users/V.NAGA%20PHANENDRA/.gemini/antigravity/scratch/rymec-reclaim-it/docs/TEST_CASES.md)
+
+---
+
+## 👥 Project Team & Contributors
+This project was architected, engineered, and evaluated by final-year students of the **Department of Computer Science & Engineering**, **Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC)**, Ballari.
+
+| Contributor | GitHub Profile | Role & Primary Responsibilities | Institutional Department |
+| :--- | :--- | :--- | :--- |
+| <img src="https://github.com/karthikhkarthik92-art.png" width="48" height="48" style="border-radius:50%"/> <br> **Karthik H** | [@karthikhkarthik92-art](https://github.com/karthikhkarthik92-art) | **Core Contributor — Algorithmic Match Engine & Custody Architecture** <br> • Pure explainable scoring engine (`lib/matching.ts`) <br> • 6-Digit SHA-256 handover verification & QR lifecycle <br> • Custody timeline & custody events logging | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/akash-gouda.png" width="48" height="48" style="border-radius:50%"/> <br> **Akash Gouda** | [@akash-gouda](https://github.com/akash-gouda) | **Core Contributor — Full-Stack Integration & Database Services** <br> • Express REST APIs & Supabase PostgreSQL integration <br> • Private ID-card instant resolution & masking <br> • Watchlist triggers & notification services | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/siddharthpc0925.png" width="48" height="48" style="border-radius:50%"/> <br> **Siddharth P C** | [@siddharthpc0925](https://github.com/siddharthpc0925) | **Core Contributor — UI/UX Design & Liquid Glass Components** <br> • Apple iOS Liquid Glass UI system & animations <br> • Pebble pill filters, responsive item directory & cards <br> • Photo dominant color extractor & canvas quantization | Computer Science & Engineering, RYMEC |
+| <img src="https://github.com/veereshmugali89-bit.png" width="48" height="48" style="border-radius:50%"/> <br> **Veeresh Mugali** | [@veereshmugali89-bit](https://github.com/veereshmugali89-bit) | **Core Contributor — Verification, QA & Security Desk Portal** <br> • Security desk handover verification & admin core <br> • Hidden-detail challenge question & Levenshtein matching <br> • End-to-end testing, role guards & abuse reporting | Computer Science & Engineering, RYMEC |
+
+---
+
+### 🏛️ Institutional Credit & Governance
+**Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC)**  
+*Affiliated to Visvesvaraya Technological University (VTU), Belagavi • Approved by AICTE, New Delhi • Accredited by NAAC with 'A+' Grade*  
+**Campus:** Cantonment, Ballari — 583 104, Karnataka, India  
+**Parent Management:** Veerasaiva Vidyavardhaka Sangha, Ballari (Estd. 1916 / College Estd. 1980)  
+**Official Email Gateway:** `rymec.ismart12@gmail.com`
+

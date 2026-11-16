@@ -109,7 +109,35 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500">
+      {/* Project Contributors & Engineering Team Attribution */}
+      <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <div className="flex items-center gap-2 text-slate-400">
+          <span className="font-semibold text-slate-800 dark:text-white">Engineered by CSE Capstone Team:</span>
+          <span className="text-slate-500">RYMEC Ballari</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {[
+            { name: 'Karthik H', user: 'karthikhkarthik92-art' },
+            { name: 'Akash Gouda', user: 'akash-gouda' },
+            { name: 'Siddharth P C', user: 'siddharthpc0925' },
+            { name: 'Veeresh Mugali', user: 'veereshmugali89-bit' }
+          ].map((m, idx) => (
+            <a
+              key={idx}
+              href={`https://github.com/${m.user}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-full bg-white/5 hover:bg-white/15 px-2.5 py-1 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-all"
+              title={`${m.name} (@${m.user})`}
+            >
+              <span className="text-sky-400 font-mono text-[10px]">@</span>
+              <span>{m.user}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto mt-4 pt-4 border-t border-black/5 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500">
         <div>
           © {new Date().getFullYear()} Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC). All rights reserved.
         </div>
