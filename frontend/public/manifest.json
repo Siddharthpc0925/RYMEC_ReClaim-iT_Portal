@@ -1,0 +1,16 @@
+{
+  "short_name": "ReClaim-iT",
+  "name": "RYMEC ReClaim-iT: Campus Lost & Found",
+  "icons": [
+    {
+      "src": "/images/vvs-logo.jpg",
+      "type": "image/jpeg",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#090d16",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait"
+}
