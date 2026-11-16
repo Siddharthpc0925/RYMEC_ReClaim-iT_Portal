@@ -162,4 +162,9 @@ router.put('/users/:id/flag', (req, res) => {
   res.json({ message: `User ${user.name} is now ${user.flagged ? 'FLAGGED' : 'CLEARED'}` });
 });
 
+// GET /api/admin/audit-logs (User Activity & Location Steps)
+router.get('/audit-logs', (req, res) => {
+  res.json({ logs: db.auditLogs || [] });
+});
+
 module.exports = router;

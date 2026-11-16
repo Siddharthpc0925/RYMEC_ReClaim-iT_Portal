@@ -104,6 +104,7 @@ export const api = {
   resolveAbuseReport: (id: string) => apiRequest(`/admin/abuse-reports/${id}/resolve`, { method: 'PUT' }),
   getAdminUsers: () => apiRequest('/admin/users'),
   toggleUserFlag: (id: string) => apiRequest(`/admin/users/${id}/flag`, { method: 'PUT' }),
+  getAdminAuditLogs: () => apiRequest('/admin/audit-logs'),
 
   // Maintenance
   runMaintenance: () => apiRequest('/maintenance/run', { method: 'POST' }),

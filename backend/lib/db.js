@@ -116,6 +116,42 @@ const notifications = [];
 // 12. Abuse Reports (Clean)
 const abuseReports = [];
 
+// 13. Audit & Activity Logs (Records every user step with campus location)
+const auditLogs = [
+  {
+    id: 'log-seed-1',
+    timestamp: new Date().toISOString(),
+    user_id: 'user-admin',
+    user_name: 'Campus Security Desk',
+    user_email: 'admin@college.edu',
+    role: 'ADMIN',
+    action: 'SYSTEM_STARTUP',
+    location_name: 'RYMEC Main Arch Gate',
+    campus_zone: 'Security & Entrance',
+    details: 'Security desk monitoring initialized and online',
+    ip_address: '10.37.146.1'
+  }
+];
+
+function logUserActivity(payload) {
+  const logEntry = {
+    id: `log-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    timestamp: new Date().toISOString(),
+    user_id: payload.user_id || 'guest',
+    user_name: payload.user_name || 'Anonymous User',
+    user_email: payload.user_email || 'N/A',
+    role: payload.role || 'STUDENT',
+    action: payload.action || 'PORTAL_ACTION',
+    location_name: payload.location_name || 'Online Portal',
+    campus_zone: payload.campus_zone || 'Campus Web Gateway',
+    details: payload.details || '',
+    ip_address: payload.ip_address || '127.0.0.1'
+  };
+  auditLogs.unshift(logEntry);
+  if (auditLogs.length > 500) auditLogs.pop();
+  return logEntry;
+}
+
 // Database Helper methods
 const db = {
   locations,
@@ -130,6 +166,8 @@ const db = {
   savedSearches,
   notifications,
   abuseReports,
+  auditLogs,
+  logUserActivity,
 
   // Public items view generator (filters private, masks anonymous)
   getPublicItems(currentUser = null) {

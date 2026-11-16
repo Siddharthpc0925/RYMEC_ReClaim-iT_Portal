@@ -76,6 +76,17 @@ router.post('/register', async (req, res) => {
 
     db.profiles.push(newUser);
 
+    db.logUserActivity({
+      user_id: newUser.id,
+      user_name: resolvedName,
+      user_email: cleanEmail,
+      role: newUser.role,
+      action: 'USER_REGISTERED',
+      location_name: 'RYMEC Registration Gateway',
+      campus_zone: 'Academic Core',
+      details: `Account created for ${resolvedName} (${cleanRoll}) - Department: ${newUser.branch}, Accommodation: ${newUser.accommodation}`
+    });
+
     // Send Real OTP Email via rymec.ismart12@gmail.com
     let emailResult = { emailSent: false };
     try {
@@ -142,6 +153,17 @@ router.post('/verify-otp', (req, res) => {
     const safeProfile = { ...user };
     delete safeProfile.password_hash;
     delete safeProfile.verification_code;
+
+    db.logUserActivity({
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      role: user.role,
+      action: 'OTP_VERIFIED',
+      location_name: 'Email OTP Security Gateway',
+      campus_zone: 'Institutional Auth Desk',
+      details: `Email ${user.email} verified with 6-digit OTP code`
+    });
 
     return res.json({
       message: 'Email successfully verified! Welcome to RYMEC ReClaim-iT.',
@@ -294,6 +316,17 @@ router.post('/login', (req, res) => {
     delete safeProfile.password_hash;
     delete safeProfile.verification_code;
 
+    db.logUserActivity({
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      role: user.role,
+      action: 'USER_LOGIN',
+      location_name: user.role === 'ADMIN' ? 'Security Desk Terminal' : 'Campus Web Gateway',
+      campus_zone: user.role === 'ADMIN' ? 'Security & Entrance' : 'Student Portal',
+      details: `${user.role} signed in successfully (${user.email})`
+    });
+
     return res.json({
       message: 'Login successful',
       token,
@@ -347,6 +380,18 @@ router.put('/change-password', authenticate, (req, res) => {
     }
 
     user.password_hash = bcrypt.hashSync(new_password, 10);
+
+    db.logUserActivity({
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      role: user.role,
+      action: 'PASSWORD_CHANGED',
+      location_name: 'Account Settings Desk',
+      campus_zone: 'Personal Security',
+      details: 'User updated login password credentials securely'
+    });
+
     return res.json({ message: 'Password updated successfully!' });
   } catch (err) {
     console.error('Change password error:', err);
@@ -381,6 +426,17 @@ router.put('/profile', authenticate, (req, res) => {
     const safeProfile = { ...user };
     delete safeProfile.password_hash;
     delete safeProfile.verification_code;
+
+    db.logUserActivity({
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      role: user.role,
+      action: 'PROFILE_UPDATED',
+      location_name: 'Account Settings Desk',
+      campus_zone: 'Academic Profiling',
+      details: `Profile updated: Dept=${user.branch}, Section=${user.section}, Year=${user.academic_year}, Accomm=${user.accommodation}`
+    });
 
     return res.json({ message: 'Profile updated successfully!', user: safeProfile });
   } catch (err) {

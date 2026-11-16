@@ -14,7 +14,15 @@ import {
   CheckCircle,
   Flag,
   FileSpreadsheet,
-  Printer
+  Printer,
+  Activity,
+  Download,
+  Search,
+  CheckCircle2,
+  Shield,
+  Mail,
+  Building2,
+  Home as HomeIcon
 } from 'lucide-react';
 import {
   BarChart,
@@ -48,18 +56,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
   const [claimsQueue, setClaimsQueue] = useState<any[]>([]);
   const [abuseReports, setAbuseReports] = useState<any[]>([]);
   const [usersList, setUsersList] = useState<any[]>([]);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [auditFilter, setAuditFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [runningMaintenance, setRunningMaintenance] = useState(false);
 
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, claimsRes, abuseRes, usersRes, locRes] = await Promise.all([
+      const [statsRes, claimsRes, abuseRes, usersRes, locRes, logsRes] = await Promise.all([
         api.getAdminStats(),
         api.getAdminClaims(),
         api.getAdminAbuseReports(),
         api.getAdminUsers(),
         api.getLocations(),
+        api.getAdminAuditLogs().catch(() => ({ logs: [] })),
       ]);
 
       setStats(statsRes);
@@ -67,6 +78,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
       setAbuseReports(abuseRes.reports || []);
       setUsersList(usersRes.users || []);
       setLocations(locRes.locations || []);
+      setAuditLogs(logsRes.logs || []);
     } catch (err: any) {
       toast(err.message || 'Error fetching admin intelligence', 'error');
     } finally {
@@ -344,50 +356,213 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
         )}
       </div>
 
-      {/* Student Accounts & Fraud Guard (U15) */}
+      {/* User Accounts & Credentials Database */}
       <div className="glass p-6 rounded-3xl border border-white/20 shadow-xl space-y-4">
-        <h4 className="font-bold text-sm text-white">Student Trust Scores & Fraud Protection (U15)</h4>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h4 className="font-bold text-sm text-white flex items-center gap-2">
+              <Users className="w-4 h-4 text-indigo-400" />
+              <span>User Credentials & Profiles Database</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                {usersList.length} Accounts
+              </span>
+            </h4>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live database records of all registered students, faculty members, and security personnel.
+            </p>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="text-[10px] uppercase text-slate-400 border-b border-white/10">
+            <thead className="text-[10px] uppercase text-slate-400 border-b border-white/10 bg-white/5">
               <tr>
-                <th className="py-2.5 px-3">Student Name</th>
-                <th className="py-2.5 px-3">Roll Number</th>
+                <th className="py-2.5 px-3">Name & Role</th>
+                <th className="py-2.5 px-3">Email Address</th>
+                <th className="py-2.5 px-3">Roll / Employee ID</th>
+                <th className="py-2.5 px-3">Department / Branch</th>
+                <th className="py-2.5 px-3">Accommodation</th>
                 <th className="py-2.5 px-3">Trust Points</th>
-                <th className="py-2.5 px-3">Fraud Claims</th>
-                <th className="py-2.5 px-3">Status</th>
-                <th className="py-2.5 px-3 text-right">Action</th>
+                <th className="py-2.5 px-3">Verification</th>
+                <th className="py-2.5 px-3 text-right">Status / Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {usersList.filter(u => u.role === 'STUDENT').map((u) => (
-                <tr key={u.id} className="hover:bg-white/5">
-                  <td className="py-2.5 px-3 font-semibold text-white">{u.name}</td>
-                  <td className="py-2.5 px-3 text-slate-400 font-mono">{u.roll_no}</td>
-                  <td className="py-2.5 px-3 font-bold text-amber-400">{u.points} pts</td>
-                  <td className="py-2.5 px-3 font-mono text-rose-400">{u.fraud_claims}</td>
+              {usersList.map((u) => (
+                <tr key={u.id} className="hover:bg-white/5 transition-colors">
                   <td className="py-2.5 px-3">
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        u.flagged
-                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                          : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      }`}
-                    >
-                      {u.flagged ? 'FLAGGED' : 'ACTIVE'}
+                    <div className="font-semibold text-white">{u.name}</div>
+                    <span className={`inline-block px-1.5 py-0.2 rounded-md text-[9px] font-bold uppercase mt-0.5 ${
+                      u.role === 'ADMIN' 
+                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                        : u.role === 'FACULTY'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
+                    }`}>
+                      {u.role}
                     </span>
+                  </td>
+                  <td className="py-2.5 px-3 font-mono text-slate-300">{u.email}</td>
+                  <td className="py-2.5 px-3 text-slate-400 font-mono">{u.roll_no}</td>
+                  <td className="py-2.5 px-3 text-slate-300">
+                    <div>{u.branch || 'General'}</div>
+                    <span className="text-[10px] text-slate-400 block">{u.section ? `Sec ${u.section}` : ''} {u.academic_year ? `• ${u.academic_year}` : ''}</span>
+                  </td>
+                  <td className="py-2.5 px-3">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/10 text-slate-300">
+                      {u.accommodation || 'Day Scholar'}
+                    </span>
+                  </td>
+                  <td className="py-2.5 px-3 font-bold text-amber-400">
+                    {u.points || 0} pts
+                    {u.fraud_claims > 0 && (
+                      <span className="text-rose-400 text-[10px] block font-mono">({u.fraud_claims} fraud)</span>
+                    )}
+                  </td>
+                  <td className="py-2.5 px-3">
+                    {u.is_verified ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400">
+                        <CheckCircle2 className="w-3 h-3" />
+                        OTP Verified
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-medium text-amber-400">Pending OTP</span>
+                    )}
                   </td>
                   <td className="py-2.5 px-3 text-right">
                     <button
                       onClick={() => handleToggleFlag(u.id)}
-                      className="text-slate-400 hover:text-white p-1 text-xs"
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all ${
+                        u.flagged
+                          ? 'bg-rose-500 text-white'
+                          : 'bg-white/10 hover:bg-white/20 text-slate-300'
+                      }`}
                       title="Toggle Flag"
                     >
-                      <Flag className={`w-3.5 h-3.5 ${u.flagged ? 'text-rose-400 fill-rose-400' : ''}`} />
+                      {u.flagged ? 'Flagged' : 'Active'}
                     </button>
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Step-by-Step User Activity & Campus Location Audit Trail */}
+      <div className="glass p-6 rounded-3xl border border-white/20 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h4 className="font-bold text-sm text-white flex items-center gap-2">
+              <Activity className="w-4 h-4 text-emerald-400" />
+              <span>Step-by-Step User Activity &amp; Campus Location Audit Trail</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                {auditLogs.length} Actions Tracked
+              </span>
+            </h4>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Detailed tracking of each and every user step (Login, Report, Claim, Handover, Verification) mapped to physical campus locations.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={auditFilter}
+                onChange={(e) => setAuditFilter(e.target.value)}
+                placeholder="Filter by user, action, or location..."
+                className="pl-8 pr-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-400"
+              />
+            </div>
+
+            <button
+              onClick={() => {
+                const csvContent = "data:text/csv;charset=utf-8," + 
+                  ["Timestamp,User Name,User Email,Role,Action,Campus Location,Zone,Details"].concat(
+                    auditLogs.map(l => `"${l.timestamp}","${l.user_name}","${l.user_email}","${l.role}","${l.action}","${l.location_name}","${l.campus_zone}","${(l.details || '').replace(/"/g, '""')}"`)
+                  ).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `rymec_activity_audit_${Date.now()}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center gap-1.5 transition-all border border-white/15"
+            >
+              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto max-h-96 scrollbar-thin">
+          <table className="w-full text-xs text-left">
+            <thead className="text-[10px] uppercase text-slate-400 border-b border-white/10 sticky top-0 bg-navy-950/90 backdrop-blur-md">
+              <tr>
+                <th className="py-2.5 px-3">Timestamp</th>
+                <th className="py-2.5 px-3">User &amp; Role</th>
+                <th className="py-2.5 px-3">Action / Step Taken</th>
+                <th className="py-2.5 px-3">Campus Location</th>
+                <th className="py-2.5 px-3">Campus Zone</th>
+                <th className="py-2.5 px-3">Step Details</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5 font-mono text-[11px]">
+              {auditLogs
+                .filter(l => {
+                  if (!auditFilter.trim()) return true;
+                  const q = auditFilter.toLowerCase();
+                  return (
+                    l.user_name?.toLowerCase().includes(q) ||
+                    l.user_email?.toLowerCase().includes(q) ||
+                    l.action?.toLowerCase().includes(q) ||
+                    l.location_name?.toLowerCase().includes(q) ||
+                    l.campus_zone?.toLowerCase().includes(q) ||
+                    l.details?.toLowerCase().includes(q)
+                  );
+                })
+                .map((log) => (
+                  <tr key={log.id} className="hover:bg-white/5 transition-colors">
+                    <td className="py-2.5 px-3 text-slate-400 whitespace-nowrap">
+                      {new Date(log.timestamp).toLocaleString()}
+                    </td>
+                    <td className="py-2.5 px-3 font-sans">
+                      <div className="font-semibold text-white">{log.user_name}</div>
+                      <span className="text-[10px] text-slate-400 block font-mono">{log.user_email}</span>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase inline-block ${
+                        log.action?.includes('HANDOVER') || log.action?.includes('VERIFIED')
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          : log.action?.includes('REPORT')
+                          ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
+                          : log.action?.includes('CLAIM')
+                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                          : log.action?.includes('REGISTER') || log.action?.includes('LOGIN')
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                          : 'bg-white/10 text-slate-300 border border-white/10'
+                      }`}>
+                        {log.action}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 text-cyan-300 font-sans font-medium flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <span>{log.location_name}</span>
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-300 font-sans">
+                      <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px]">
+                        {log.campus_zone}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-300 font-sans text-xs max-w-xs truncate" title={log.details}>
+                      {log.details}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

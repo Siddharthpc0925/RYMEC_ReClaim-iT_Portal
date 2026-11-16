@@ -63,6 +63,20 @@ router.post('/', authenticate, (req, res) => {
 
   db.claims.unshift(newClaim);
 
+  const locObj = db.locations.find(l => l.id === item.location_id);
+  const locName = locObj ? locObj.name : (item.location_other || 'Campus Grounds');
+  const zoneName = locObj ? locObj.parent_zone : 'General Campus';
+  db.logUserActivity({
+    user_id: req.user.id,
+    user_name: req.user.name,
+    user_email: req.user.email,
+    role: req.user.role,
+    action: 'CLAIM_SUBMITTED',
+    location_name: locName,
+    campus_zone: zoneName,
+    details: `Claim filed for "${item.title}" (${item.category}) - Held at: ${item.held_at || 'Campus Desk'}`
+  });
+
   // Custody event (U3)
   db.custodyEvents.push({
     id: `ce-${Date.now()}-claim`,

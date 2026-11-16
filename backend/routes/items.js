@@ -236,6 +236,20 @@ router.post('/', authenticate, (req, res) => {
 
   db.items.unshift(newItem);
 
+  const locObj = db.locations.find(l => l.id === location_id);
+  const locName = locObj ? locObj.name : (location_other || 'Campus Grounds');
+  const zoneName = locObj ? locObj.parent_zone : 'General Campus';
+  db.logUserActivity({
+    user_id: req.user.id,
+    user_name: req.user.name,
+    user_email: req.user.email,
+    role: req.user.role,
+    action: type === 'LOST' ? 'REPORT_LOST_ITEM' : 'REPORT_FOUND_ITEM',
+    location_name: locName,
+    campus_zone: zoneName,
+    details: `${type}: "${title}" (${category}, Color: ${colour}) at ${locName}`
+  });
+
   // Initial custody event (U3)
   db.custodyEvents.push({
     id: `ce-${Date.now()}-init`,
