@@ -12,7 +12,6 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Phone,
   GraduationCap,
   Building2,
   Home as HomeIcon,
@@ -64,7 +63,6 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
     academic_year: '3rd Year',
     accommodation: 'Day Scholar',
     designation: 'Assistant Professor',
-    phone: '',
     password: '',
     confirm_password: ''
   });
@@ -124,12 +122,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
     e.preventDefault();
     setError(null);
 
-    if (!formData.full_name.trim() || !formData.usn_roll.trim() || !formData.password.trim()) {
+    if (!formData.full_name.trim() || !formData.usn_roll.trim() || !formData.email.trim() || !formData.password.trim()) {
       setError('Please fill in all mandatory fields.');
-      return;
-    }
-    if (formData.role === 'FACULTY' && !formData.email.trim()) {
-      setError('Please provide your official faculty email ID.');
       return;
     }
     if (formData.password.length < 6) {
@@ -143,10 +137,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
 
     setLoading(true);
     try {
-      const generatedEmail = `${formData.usn_roll.toLowerCase().trim()}@rymec.edu.in`;
-      const finalEmail = formData.role === 'FACULTY' && formData.email.trim()
-        ? formData.email.trim().toLowerCase()
-        : generatedEmail;
+      const finalEmail = formData.email.trim().toLowerCase();
 
       const res = await register({
         name: formData.full_name.trim(),
@@ -154,7 +145,6 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
         roll_no: formData.usn_roll.trim().toUpperCase(),
         usn_roll: formData.usn_roll.trim().toUpperCase(),
         email: finalEmail,
-        phone: formData.phone.trim() || null,
         password: formData.password,
         role: formData.role,
         branch: formData.branch,
@@ -167,7 +157,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
       const targetEmail = res.email || finalEmail;
       setOtpEmail(targetEmail);
       setMode('otp');
-      toast(`Verification OTP dispatched to ${targetEmail}. Please enter the 6-digit code.`, 'success');
+      toast(`The 6-digit code is sent to your entered email ID: ${targetEmail}`, 'success');
     } catch (err: any) {
       setError(err.message || 'Registration failed. Check roll number or employee ID.');
     } finally {
@@ -295,7 +285,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
             <OtpOrbitVerification
               email={otpEmail}
               title="Verify Email Address"
-              subtitle={`Enter the 6-digit verification code sent via RYMEC Gmail Gateway to ${otpEmail}.`}
+              subtitle={`The 6-digit code is sent to your entered email ID: ${otpEmail}`}
               onVerify={handleVerifyOtp}
               onResend={handleResendOtp}
               onBack={() => setMode('register')}
@@ -517,23 +507,6 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                   </select>
                 </div>
 
-                {/* Faculty Official Email ID */}
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-300 mb-1 flex items-center gap-1">
-                    <Mail className="w-3 h-3 text-amber-400" />
-                    <span>Official Faculty Email ID</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleFieldChange}
-                    placeholder="e.g. prof.name@rymec.edu.in or personal gmail"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
-                  />
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <div>
                     <label className="block text-[11px] font-semibold text-slate-300 mb-1">Faculty / Employee ID</label>
@@ -563,20 +536,25 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
               </div>
             )}
 
-            {/* Mobile Phone (Optional) */}
+            {/* Email Address with RYMEC-iSMART Dispatch Notice (Replaces Phone) */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                <Phone className="w-3.5 h-3.5 text-sky-400" />
-                <span>Phone (Optional)</span>
+                <Mail className="w-3.5 h-3.5 text-sky-400" />
+                <span>Email Address (College / Personal Gmail)</span>
               </label>
               <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
+                type="email"
+                name="email"
+                required
+                value={formData.email}
                 onChange={handleFieldChange}
-                placeholder="+91 98451 11001"
+                placeholder="e.g. student@rymec.edu.in or your.name@gmail.com"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
               />
+              <span className="text-[10px] text-slate-400 flex items-center gap-1 pt-0.5">
+                <span>OTP will be dispatched via RYMEC-iSMART</span>
+                <span className="text-sky-300 font-mono">(rymec.ismart12@gmail.com)</span>
+              </span>
             </div>
 
             {/* Passwords */}

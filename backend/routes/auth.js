@@ -96,7 +96,7 @@ router.post('/register', async (req, res) => {
     }
 
     return res.status(201).json({
-      message: `Verification code sent to ${cleanEmail}. Please check your Gmail.`,
+      message: `The 6-digit code is sent to your entered email ID: ${cleanEmail}`,
       email: cleanEmail,
       otpSent: true,
       needsVerification: true,

@@ -264,7 +264,7 @@ export const OtpOrbitVerification: React.FC<OtpOrbitVerificationProps> = ({
             subtitle
           ) : (
             <>
-              Enter the 6-digit code sent to{' '}
+              The 6-digit code is sent to your entered email ID:{' '}
               <span className="font-mono text-cyan-300 font-semibold">{email}</span>
             </>
           )}
@@ -483,7 +483,7 @@ export const OtpOrbitVerification: React.FC<OtpOrbitVerificationProps> = ({
       {status === 'verifying' && (
         <div className="flex items-center gap-2 text-xs font-semibold text-blue-300 mt-2 animate-pulse">
           <span className="h-3.5 w-3.5 rounded-full border-2 border-blue-400 border-t-transparent animate-spin" />
-          <span>Authenticating 6-digit code with RYMEC-iSMART...</span>
+          <span>Verifying 6-digit code...</span>
         </div>
       )}
 
