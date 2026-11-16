@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, MapPin, Phone, Mail, Award, Heart, ExternalLink } from 'lucide-react';
+import { Shield, MapPin, Phone, Mail, Award, Heart } from 'lucide-react';
 
 interface FooterProps {
   navigate: (route: string) => void;
@@ -25,17 +25,6 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
           <div className="flex items-center gap-1.5 text-[11px] text-emerald-500 font-medium">
             <Shield className="w-3.5 h-3.5" />
             <span>Secure Handover & Anti-Fraud Protected</span>
-          </div>
-          <div className="pt-1.5">
-            <a
-              href="https://rymec-reclaim-it.netlify.app"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11px] font-mono text-indigo-400 hover:text-indigo-300 font-bold transition-colors"
-            >
-              <span>🌐 Live Portal: rymec-reclaim-it.netlify.app</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
           </div>
         </div>
 
