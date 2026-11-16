@@ -8,7 +8,9 @@ import {
   Phone, 
   Mail, 
   Users, 
-  GraduationCap 
+  GraduationCap,
+  ExternalLink,
+  Globe
 } from 'lucide-react';
 import { GlassCard } from '../3d/GlassCard';
 
@@ -33,6 +35,65 @@ export const AboutCollege: React.FC = () => {
             <p className="text-xs sm:text-sm text-silver-300">
               Affiliated to Visvesvaraya Technological University (VTU), Belagavi • Approved by AICTE, New Delhi • Accredited with NAAC A+ Grade
             </p>
+          </div>
+        </div>
+      </GlassCard>
+
+      {/* Live Production Portal & Cloud Deployment Card */}
+      <GlassCard className="p-6 sm:p-8 border border-cyan-400/30 bg-gradient-to-r from-cyan-950/40 via-indigo-950/40 to-slate-900/60 shadow-glass-glow" glow>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-400">
+                Official Live Cloud Deployment
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                Hosted 24/7 on Netlify
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white">
+              RYMEC ReClaim-iT Portal Online
+            </h2>
+            <p className="text-xs sm:text-sm text-silver-300 max-w-2xl leading-relaxed">
+              The institutional campus lost &amp; found recovery portal is actively deployed and accessible to all RYMEC students, faculty, and security personnel.
+            </p>
+            <div className="pt-1">
+              <a
+                href="https://rymec-reclaim-it.netlify.app"
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-cyan-300 hover:text-cyan-200 text-xs sm:text-sm font-bold underline underline-offset-4 flex items-center gap-1.5"
+              >
+                <Globe className="h-4 w-4" />
+                <span>https://rymec-reclaim-it.netlify.app</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0">
+            <a
+              href="https://rymec-reclaim-it.netlify.app"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-cyan-500/25 active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <span>Visit Live Website</span>
+              <ExternalLink className="h-4 w-4" />
+            </a>
+
+            <a
+              href="https://github.com/nagavakkalagadda/RYMEC_ReClaim-iT_Portal"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/15 transition-all flex items-center justify-center gap-2"
+            >
+              <span>GitHub Repo</span>
+            </a>
           </div>
         </div>
       </GlassCard>
@@ -84,17 +145,29 @@ export const AboutCollege: React.FC = () => {
               <Mail className="h-4 w-4 text-cyan-400 shrink-0" />
               <span>principal@rymec.edu.in</span>
             </div>
-            <div className="mt-2 rounded-xl border border-blue-400/20 bg-blue-500/10 p-2.5 space-y-1">
+            <div className="mt-2 rounded-xl border border-blue-400/20 bg-blue-500/10 p-2.5 space-y-1.5">
               <span className="text-[10px] uppercase font-bold text-blue-300 block">
-                Official ReClaim-iT Desk
+                Official ReClaim-iT Helpdesk
               </span>
               <a 
-                href="mailto:reclaim@rymec.edu.in" 
+                href="mailto:rymec.ismart12@gmail.com" 
                 className="font-medium text-white hover:text-blue-200 transition-colors flex items-center gap-1.5 break-all text-xs"
               >
                 <Mail className="h-3.5 w-3.5 text-blue-300 shrink-0" />
-                <span>reclaim@rymec.edu.in</span>
+                <span>rymec.ismart12@gmail.com</span>
               </a>
+              <div className="pt-1.5 border-t border-white/10 flex items-center justify-between">
+                <span className="text-[10px] text-silver-400">Live Website:</span>
+                <a
+                  href="https://rymec-reclaim-it.netlify.app"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[11px] font-mono font-bold text-cyan-300 hover:underline flex items-center gap-1"
+                >
+                  <span>rymec-reclaim-it.netlify.app</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
             </div>
           </div>
         </GlassCard>

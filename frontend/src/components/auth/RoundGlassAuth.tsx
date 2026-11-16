@@ -404,6 +404,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
                     >
                       <option value="Computer Science & Engineering">Computer Science (CSE)</option>
+                      <option value="Data Science">Data Science (CSE-DS)</option>
+                      <option value="CSE-Cyber Security">CSE-Cyber Security (CSE-CS)</option>
                       <option value="Information Science & Engineering">Information Science (ISE)</option>
                       <option value="Artificial Intelligence & ML">AI & Machine Learning (AIML)</option>
                       <option value="Electronics & Communication">Electronics & Comm. (ECE)</option>
@@ -498,6 +500,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                     className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
                   >
                     <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                    <option value="Data Science">Data Science (CSE-DS)</option>
+                    <option value="CSE-Cyber Security">CSE-Cyber Security (CSE-CS)</option>
                     <option value="Information Science & Engineering">Information Science & Engineering (ISE)</option>
                     <option value="Artificial Intelligence & ML">Artificial Intelligence & ML (AIML)</option>
                     <option value="Electronics & Communication">Electronics & Communication (ECE)</option>

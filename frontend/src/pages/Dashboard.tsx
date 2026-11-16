@@ -826,13 +826,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
                     onChange={(e) => setProfileBranch(e.target.value)}
                     className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-900 dark:text-white bg-slate-900/80 focus:outline-none"
                   >
-                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-                    <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
-                    <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</option>
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                    <option value="Civil Engineering">Civil Engineering</option>
-                    <option value="Information Science & Engineering">Information Science & Engineering</option>
-                    <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+                    <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                    <option value="Data Science">Data Science (CSE-DS)</option>
+                    <option value="CSE-Cyber Security">CSE-Cyber Security (CSE-CS)</option>
+                    <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+                    <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+                    <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+                    <option value="Information Science & Engineering">Information Science & Engineering (ISE)</option>
+                    <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AIML)</option>
                   </select>
                 </div>
 
