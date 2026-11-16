@@ -1,7 +1,19 @@
 # RYMEC ReClaim-iT: Campus Lost & Found Portal
 > **Veerasaiva Vidyavardhaka Sangha's**  
 > **Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari**  
-> *Affiliated to Visvesvaraya Technological University (VTU), Belagavi | Approved by AICTE, New Delhi | Accredited by NAAC*
+> *Affiliated to Visvesvaraya Technological University (VTU), Belagavi | Approved by AICTE, New Delhi | Accredited by NAAC with 'A+' Grade*
+
+---
+
+## 🌐 Live Production Website
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b5fe07e4-7668-4642-a29b-6d81e6df98f1/deploy-status)](https://app.netlify.com/sites/rymec-reclaim-it/deploys)
+[![Live Website](https://img.shields.io/badge/Live%20Website-rymec--reclaim--it.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://rymec-reclaim-it.netlify.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-RYMEC__ReClaim--iT__Portal-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/nagavakkalagadda/RYMEC_ReClaim-iT_Portal)
+
+### 🔗 **Live Website URL**: [https://rymec-reclaim-it.netlify.app](https://rymec-reclaim-it.netlify.app)
+
+The official live cloud deployment of **RYMEC ReClaim-iT** is hosted 24/7 on Netlify:
+👉 **[Access RYMEC ReClaim-iT Live Portal](https://rymec-reclaim-it.netlify.app)**
 
 ---
 
@@ -14,6 +26,7 @@ On most college campuses, lost phones, student ID cards, wallets, and calculator
 3. Protects ownership through a **Hidden-Detail Challenge Question** and a cryptographic **6-Digit Handover Code**.
 4. Safeguards student privacy with **Masked In-App Chat** and **Instant Private ID-Card Notifications**.
 5. Gives college administration deep **Prevention Insights & Hotspot Heatmaps** to prevent campus losses.
+6. Delivers real-time institutional OTP verification via the official **RYMEC-iSMART** Gateway (`rymec.ismart12@gmail.com`).
 
 ---
 
@@ -53,16 +66,16 @@ npm run test
 
 ---
 
-## 🔐 Demo Credentials
-
-| Role | Name | Email / Roll Number | Password | Capabilities |
-| :--- | :--- | :--- | :--- | :--- |
-| **Admin** | Campus Security Desk | `admin@college.edu` / `ADM-001` | `Admin@123` | Analytics, Hotspot Heatmap, Claims Moderation, A4 Posters, Maintenance |
-| **Student A** | Ananya Rao (CSE) | `ananya.rao@rymec.edu.in` / `3BR21CS001` | `Student@123` | Reported lost black wallet; receives match alerts, private ID alerts |
-| **Student B** | Rohan Patil (ECE) | `rohan.patil@rymec.edu.in` / `3BR21EC045` | `Student@123` | Reported found wallet with verification question; completes handover |
-| **Student C** | Sneha Kulkarni (ISE) | `sneha.k@rymec.edu.in` / `3BR22IS032` | `Student@123` | Found Ananya's ID card; deposited at security desk |
-
-*(Quick-fill buttons are provided on the Login page for 1-click evaluation!)*
+## 🛡️ Authentication & Account Settings
+- **Email-Based Sign-In**: Login using your College or Personal Email ID (`student@rymec.edu.in` or `your.name@gmail.com`).
+- **Real OTP Email Verification**: 6-digit authentication codes dispatched directly from `rymec.ismart12@gmail.com`.
+- **Institutional Roles**: Distinct academic workflows for **Student** and **Faculty Member**.
+- **Accommodation Profiling**: Categorized into **Day Scholar**, **PG**, or **Hostel**.
+- **Academic Department Selection**: Computer Science, ECE, EEE, Mechanical, Civil, ISE, and AI & ML.
+- **Account Settings in Dashboard**:
+  - Live profile information management (Legal Name, Department, Section, Academic Year, Accommodation).
+  - Security & Password change portal with bcrypt cryptographic hashing.
+  - Direct Grievance & Helpdesk escalation to `rymec.ismart12@gmail.com`.
 
 ---
 
@@ -74,14 +87,14 @@ npm run test
 - **C3: Browse & Search with Status Badges**: `frontend/src/pages/Browse.tsx`, `frontend/src/components/items/ItemCard.tsx`
 - **C4: Item Detail & Timeline**: `frontend/src/pages/ItemDetail.tsx`, `backend/lib/db.js`
 - **C5: Status Lifecycle**: `backend/routes/items.js`, `backend/routes/handover.js`
-- **C6: My Dashboard (6 Tabs)**: `frontend/src/pages/Dashboard.tsx`
+- **C6: My Dashboard (7 Tabs including Account Settings)**: `frontend/src/pages/Dashboard.tsx`
 - **C7: Realtime Notifications & Email Logger**: `backend/lib/mailer.js`, `backend/routes/notifications.js`, `frontend/src/components/layout/Navbar.tsx`
 - **C8: Admin Dashboard**: `frontend/src/pages/AdminDashboard.tsx`, `backend/routes/admin.js`
 - **C9: Glass Skeletons, Toasts & 404**: `frontend/src/context/ToastContext.tsx`, `frontend/src/pages/NotFound.tsx`, `frontend/src/index.css`
 
 ### The 18 Unique Features (U1 – U18)
 - **U1: Explainable Smart Match Engine**: `backend/lib/matching.js`, `backend/tests/matching.test.js`, `frontend/src/components/items/MatchRing.tsx`
-- **U2: ID-Card Instant Notify**: `backend/routes/items.js` (L125-145), `frontend/src/pages/Report.tsx`
+- **U2: ID-Card Instant Notify**: `backend/routes/items.js`, `frontend/src/pages/Report.tsx`
 - **U3: Handover Code & Custody Log**: `backend/lib/db.js`, `backend/routes/handover.js`, `frontend/src/pages/Handover.tsx`
 - **U4: Hidden-Detail Challenge Question**: `backend/lib/db.js` (`levenshteinDistance`), `frontend/src/pages/ItemDetail.tsx`, `frontend/src/pages/Dashboard.tsx`
 - **U5: Masked In-App Chat**: `backend/routes/chat.js`, `frontend/src/components/chat/MaskedChat.tsx`
@@ -128,4 +141,3 @@ This project was architected, engineered, and evaluated by final-year students o
 **Campus:** Cantonment, Ballari — 583 104, Karnataka, India  
 **Parent Management:** Veerasaiva Vidyavardhaka Sangha, Ballari (Estd. 1916 / College Estd. 1980)  
 **Official Email Gateway:** `rymec.ismart12@gmail.com`
-

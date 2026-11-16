@@ -96,7 +96,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
     e.preventDefault();
     setError(null);
     if (!loginIdentifier.trim() || !loginPassword.trim()) {
-      setError('Please enter your Roll Number / Employee ID and password.');
+      setError('Please enter your College / Personal Email ID and password.');
       return;
     }
     setLoading(true);
@@ -296,15 +296,15 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-sky-400" />
-                <span>Roll Number / Employee ID</span>
+                <Mail className="w-3.5 h-3.5 text-sky-400" />
+                <span>College / Personal Email ID</span>
               </label>
               <input
                 type="text"
                 required
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
-                placeholder="e.g. 3BR21CS089 or Faculty ID"
+                placeholder="e.g. student@rymec.edu.in or your.name@gmail.com"
                 className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
               />
             </div>

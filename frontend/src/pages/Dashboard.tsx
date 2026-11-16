@@ -17,7 +17,17 @@ import {
   Tag,
   MapPin,
   Calendar,
-  AlertTriangle
+  AlertTriangle,
+  Settings,
+  User,
+  Mail,
+  Building2,
+  Home as HomeIcon,
+  Eye,
+  EyeOff,
+  Save,
+  Key,
+  Lock
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
@@ -29,7 +39,7 @@ interface DashboardProps {
   navigate: (route: string) => void;
 }
 
-type TabType = 'reports' | 'my-claims' | 'incoming' | 'watchlist' | 'points' | 'notifications';
+type TabType = 'reports' | 'my-claims' | 'incoming' | 'watchlist' | 'points' | 'notifications' | 'settings';
 
 export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
   const { user, badges, refreshUser } = useAuth();
@@ -51,6 +61,88 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
 
   // Selected QR modal
   const [selectedQrClaim, setSelectedQrClaim] = useState<Claim | null>(null);
+
+  // Account Settings Form State
+  const [profileName, setProfileName] = useState(user?.name || '');
+  const [profileBranch, setProfileBranch] = useState(user?.branch || 'Computer Science & Engineering');
+  const [profileSection, setProfileSection] = useState(user?.section || 'A');
+  const [profileYear, setProfileYear] = useState(user?.academic_year || '3rd Year');
+  const [profileAccommodation, setProfileAccommodation] = useState(user?.accommodation || 'Day Scholar');
+  const [profilePhone, setProfilePhone] = useState(user?.phone || '');
+  const [profileSaving, setProfileSaving] = useState(false);
+
+  // Password Change Form State
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPass, setShowCurrentPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [passwordSaving, setPasswordSaving] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setProfileName(user.name || '');
+      setProfileBranch(user.branch || 'Computer Science & Engineering');
+      setProfileSection(user.section || 'A');
+      setProfileYear(user.academic_year || '3rd Year');
+      setProfileAccommodation(user.accommodation || 'Day Scholar');
+      setProfilePhone(user.phone || '');
+    }
+  }, [user]);
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setProfileSaving(true);
+    try {
+      const res = await api.updateProfile({
+        name: profileName,
+        branch: profileBranch,
+        section: profileSection,
+        academic_year: profileYear,
+        accommodation: profileAccommodation,
+        phone: profilePhone,
+      });
+      toast(res.message || 'Profile updated successfully!', 'success');
+      refreshUser();
+    } catch (err: any) {
+      toast(err.message || 'Failed to update profile', 'error');
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword) {
+      toast('Please enter both your current password and a new password.', 'error');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast('New password must be at least 6 characters long.', 'error');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast('New passwords do not match. Please verify.', 'error');
+      return;
+    }
+
+    setPasswordSaving(true);
+    try {
+      const res = await api.changePassword({
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+      toast(res.message || 'Password changed successfully!', 'success');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err: any) {
+      toast(err.message || 'Failed to change password. Check your current password.', 'error');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
 
   const fetchDashboardData = async () => {
     if (!user) return;
@@ -148,6 +240,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
     { id: 'watchlist', label: 'Watchlist', count: savedSearches.length, icon: Bookmark },
     { id: 'points', label: 'Points & Badges', count: user?.points || 0, icon: Award },
     { id: 'notifications', label: 'Notifications', count: notifications.filter(n => !n.is_read).length, icon: Bell },
+    { id: 'settings', label: 'Account Settings', count: undefined, icon: Settings },
   ];
 
   return (
@@ -209,13 +302,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
             >
               <Icon className="w-4 h-4" />
               <span>{tab.label}</span>
-              <span
-                className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                  isActive ? 'bg-white/20 text-white' : 'bg-black/20 text-slate-400'
-                }`}
-              >
-                {tab.count}
-              </span>
+              {tab.count !== undefined && (
+                <span
+                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-black/20 text-slate-400'
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              )}
             </button>
           );
         })}
@@ -632,6 +727,319 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
                 {n.link && <ExternalLink className="w-4 h-4 text-indigo-400 flex-shrink-0" />}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 7: Account Settings */}
+      {activeTab === 'settings' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Settings className="w-5 h-5 text-indigo-400" />
+                <span>Account Settings & Identity</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Manage your profile details, department affiliation, accommodation, and password security.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Card 1: Academic & Profile Details */}
+            <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-black/10 dark:border-white/10">
+                <User className="w-4 h-4 text-indigo-400" />
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">Profile & Institutional Details</h4>
+              </div>
+
+              <form onSubmit={handleUpdateProfile} className="space-y-4">
+                {/* Full Legal Name */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Full Legal Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    required
+                    className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                  />
+                </div>
+
+                {/* Email Address (Read-only with badge) */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                    <span>Registered Email Address</span>
+                    <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Verified via OTP
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input
+                      type="email"
+                      value={user?.email || ''}
+                      disabled
+                      className="w-full glass-input pl-10 pr-4 py-2.5 text-xs text-slate-400 bg-black/10 dark:bg-white/5 cursor-not-allowed border border-white/10"
+                    />
+                  </div>
+                  <span className="text-[10px] text-slate-400 block">
+                    Dispatched from RYMEC-iSMART (<code className="text-indigo-400">rymec.ismart12@gmail.com</code>)
+                  </span>
+                </div>
+
+                {/* Roll Number / USN & Role */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Roll Number / USN
+                    </label>
+                    <input
+                      type="text"
+                      value={user?.roll_no || ''}
+                      disabled
+                      className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-400 bg-black/10 dark:bg-white/5 cursor-not-allowed border border-white/10"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Institutional Role
+                    </label>
+                    <div className="px-3.5 py-2.5 rounded-xl bg-indigo-500/10 border border-indigo-400/30 text-indigo-400 text-xs font-bold uppercase tracking-wider flex items-center justify-center">
+                      {user?.role}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Branch / Department */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Department / Branch</span>
+                  </label>
+                  <select
+                    value={profileBranch}
+                    onChange={(e) => setProfileBranch(e.target.value)}
+                    className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-900 dark:text-white bg-slate-900/80 focus:outline-none"
+                  >
+                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                    <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+                    <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Information Science & Engineering">Information Science & Engineering</option>
+                    <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+                  </select>
+                </div>
+
+                {/* Section & Academic Year */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Section
+                    </label>
+                    <select
+                      value={profileSection}
+                      onChange={(e) => setProfileSection(e.target.value)}
+                      className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-900 dark:text-white bg-slate-900/80 focus:outline-none"
+                    >
+                      <option value="A">Section A</option>
+                      <option value="B">Section B</option>
+                      <option value="C">Section C</option>
+                      <option value="D">Section D</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Academic Year
+                    </label>
+                    <select
+                      value={profileYear}
+                      onChange={(e) => setProfileYear(e.target.value)}
+                      className="w-full glass-input px-3.5 py-2.5 text-xs text-slate-900 dark:text-white bg-slate-900/80 focus:outline-none"
+                    >
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="Faculty Member">Faculty Member</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Accommodation (Day Scholar, PG, Hostel) */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                    <HomeIcon className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Accommodation Type</span>
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {['Day Scholar', 'PG', 'Hostel'].map((type) => (
+                      <button
+                        type="button"
+                        key={type}
+                        onClick={() => setProfileAccommodation(type)}
+                        className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border ${
+                          profileAccommodation === type
+                            ? 'bg-indigo-600 text-white border-indigo-400 shadow-md'
+                            : 'glass text-slate-400 border-white/10 hover:text-white'
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={profileSaving}
+                  className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {profileSaving ? (
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Save className="w-3.5 h-3.5" />
+                      <span>Save Profile Changes</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+            {/* Column 2: Password Security & Grievance Info */}
+            <div className="space-y-6">
+              {/* Security & Password Card */}
+              <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-black/10 dark:border-white/10">
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Security & Password Management</h4>
+                </div>
+
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  {/* Current Password */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Current Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showCurrentPass ? 'text' : 'password'}
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        placeholder="Enter your current password"
+                        required
+                        className="w-full glass-input px-3.5 pr-10 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPass(!showCurrentPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                      >
+                        {showCurrentPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* New Password */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      New Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showNewPass ? 'text' : 'password'}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="At least 6 characters"
+                        required
+                        className="w-full glass-input px-3.5 pr-10 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPass(!showNewPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                      >
+                        {showNewPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Confirm New Password */}
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                      Confirm New Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showConfirmPass ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-enter your new password"
+                        required
+                        className="w-full glass-input px-3.5 pr-10 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPass(!showConfirmPass)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                      >
+                        {showConfirmPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={passwordSaving}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white text-xs font-bold shadow-lg shadow-amber-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {passwordSaving ? (
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <Key className="w-3.5 h-3.5" />
+                        <span>Update Password</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+
+              {/* Grievance & Helpdesk Card */}
+              <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-3">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-emerald-400" />
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Grievance & Report Helpdesk</h4>
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  For direct complaint filing, status inquiries, or urgent committee escalation:
+                </p>
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                  <div className="text-xs">
+                    <span className="text-slate-400 block text-[11px]">Direct Grievance Email:</span>
+                    <a
+                      href="mailto:rymec.ismart12@gmail.com"
+                      className="font-mono text-indigo-400 hover:underline font-bold"
+                    >
+                      rymec.ismart12@gmail.com
+                    </a>
+                  </div>
+                  <a
+                    href="mailto:rymec.ismart12@gmail.com"
+                    className="px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600 text-white text-[11px] font-semibold transition-all border border-indigo-500/40"
+                  >
+                    Send Email
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

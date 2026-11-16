@@ -48,6 +48,10 @@ export const api = {
   resendOtp: (payload: { email: string }) => apiRequest('/auth/resend-otp', { method: 'POST', body: JSON.stringify(payload) }),
   sendLoginOtp: (payload: { identifier: string }) => apiRequest('/auth/send-login-otp', { method: 'POST', body: JSON.stringify(payload) }),
   getMe: () => apiRequest('/auth/me'),
+  changePassword: (data: { current_password: string; new_password: string }) =>
+    apiRequest('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) }),
+  updateProfile: (data: any) =>
+    apiRequest('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }),
 
   // Items
   getItems: (params: Record<string, string | number> = {}) => {

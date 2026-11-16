@@ -323,4 +323,70 @@ router.get('/me', authenticate, (req, res) => {
   });
 });
 
+// ──────────────────────────────────────────────────────────────
+// PUT /api/auth/change-password (Account Settings)
+// ──────────────────────────────────────────────────────────────
+router.put('/change-password', authenticate, (req, res) => {
+  try {
+    const { current_password, new_password } = req.body;
+    if (!current_password || !new_password) {
+      return res.status(400).json({ error: 'Both current password and new password are required.' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters long.' });
+    }
+
+    const user = db.profiles.find(p => p.id === req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User profile not found.' });
+    }
+
+    const isValid = bcrypt.compareSync(current_password, user.password_hash);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Current password does not match.' });
+    }
+
+    user.password_hash = bcrypt.hashSync(new_password, 10);
+    return res.json({ message: 'Password updated successfully!' });
+  } catch (err) {
+    console.error('Change password error:', err);
+    return res.status(500).json({ error: 'Failed to change password: ' + err.message });
+  }
+});
+
+// ──────────────────────────────────────────────────────────────
+// PUT /api/auth/profile (Update Profile in Account Settings)
+// ──────────────────────────────────────────────────────────────
+router.put('/profile', authenticate, (req, res) => {
+  try {
+    const { name, phone, branch, section, academic_year, accommodation } = req.body;
+    const user = db.profiles.find(p => p.id === req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User profile not found.' });
+    }
+
+    if (name && name.trim()) {
+      user.name = name.trim();
+      user.full_name = name.trim();
+    }
+    if (phone !== undefined) user.phone = phone ? phone.trim() : null;
+    if (branch) user.branch = branch;
+    if (section) user.section = section;
+    if (academic_year) user.academic_year = academic_year;
+    if (accommodation) {
+      user.accommodation = accommodation;
+      user.hostel_block = accommodation;
+    }
+
+    const safeProfile = { ...user };
+    delete safeProfile.password_hash;
+    delete safeProfile.verification_code;
+
+    return res.json({ message: 'Profile updated successfully!', user: safeProfile });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    return res.status(500).json({ error: 'Failed to update profile: ' + err.message });
+  }
+});
+
 module.exports = router;
