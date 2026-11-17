@@ -62,6 +62,7 @@ export const App: React.FC = () => {
   let currentTab = 'home';
   if (pathname === '/report') currentTab = 'report';
   else if (pathname === '/browse' || pathname.startsWith('/items/')) currentTab = 'browse';
+  else if (pathname === '/hotspots' || pathname.startsWith('/near/')) currentTab = 'hotspots';
   else if (pathname === '/handover') currentTab = 'handover';
   else if (pathname === '/about') currentTab = 'about';
   else if (pathname === '/dashboard') currentTab = 'dashboard';
@@ -71,6 +72,7 @@ export const App: React.FC = () => {
     if (tab === 'home') navigate('/');
     else if (tab === 'report') navigate('/report');
     else if (tab === 'browse') navigate('/browse');
+    else if (tab === 'hotspots') navigate('/hotspots');
     else if (tab === 'handover') navigate('/handover');
     else if (tab === 'about') navigate('/about');
     else if (tab === 'dashboard') {
@@ -179,7 +181,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col font-sans selection:bg-brand-royal selection:text-white bg-navy-950 text-slate-100">
-      {/* 3D Ambient Floating Particles (like rymec-grievance-desk) */}
+      {/* 3D Ambient Aurora Particles */}
       <FloatingParticles />
 
       {/* Liquid Glass Background */}

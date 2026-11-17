@@ -47,10 +47,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
   };
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'report', label: 'Report Item' },
-    { id: 'browse', label: 'Browse Directory' },
-    { id: 'handover', label: 'Handover QR' },
+    { id: 'home', label: 'Campus Radar' },
+    { id: 'browse', label: 'Directory' },
+    { id: 'report', label: 'Report Lost/Found' },
+    { id: 'hotspots', label: 'Drop Desks' },
+    { id: 'handover', label: 'Verify PIN' },
     { id: 'about', label: 'About RYMEC' },
   ];
 

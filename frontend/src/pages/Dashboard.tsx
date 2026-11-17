@@ -915,7 +915,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
               </form>
             </div>
 
-            {/* Column 2: Password Security & Grievance Info */}
+            {/* Column 2: Password Security & Support */}
             <div className="space-y-6">
               {/* Security & Password Card */}
               <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-5">
@@ -1014,28 +1014,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
                 </form>
               </div>
 
-              {/* Grievance & Helpdesk Card */}
+              {/* Campus Lost & Found Custody & Support Card */}
               <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-3">
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-emerald-400" />
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Grievance & Report Helpdesk</h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Campus Custody & Support Desk</h4>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  For direct complaint filing, status inquiries, or urgent committee escalation:
+                  For secure drop desk inquiries, unclaimed property queries, or verification assistance:
                 </p>
                 <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
                   <div className="text-xs">
-                    <span className="text-slate-400 block text-[11px]">Direct Grievance Email:</span>
+                    <span className="text-slate-400 block text-[11px]">Official Recovery Gateway:</span>
                     <a
                       href="mailto:rymec.ismart12@gmail.com"
-                      className="font-mono text-indigo-400 hover:underline font-bold"
+                      className="font-mono text-emerald-400 hover:underline font-bold"
                     >
                       rymec.ismart12@gmail.com
                     </a>
                   </div>
                   <a
                     href="mailto:rymec.ismart12@gmail.com"
-                    className="px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600 text-white text-[11px] font-semibold transition-all border border-indigo-500/40"
+                    className="px-3 py-1.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600 text-white text-[11px] font-semibold transition-all border border-emerald-500/40"
                   >
                     Send Email
                   </a>

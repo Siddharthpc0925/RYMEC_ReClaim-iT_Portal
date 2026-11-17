@@ -57,53 +57,58 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
           </ul>
         </div>
 
-        {/* Col 3: Institutional Redressal & Cells */}
+        {/* Col 3: Campus Custody & Drop Desks */}
         <div className="space-y-2">
           <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
-            Institutional Redressal
+            Campus Drop Desks
           </h4>
           <ul className="space-y-1.5 text-xs">
-            <li className="hover:text-sky-400 transition-colors cursor-pointer">
-              Campus Security & Custody Desk
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-emerald-400" />
+              <span>Main Security Gate 1 Kiosk</span>
             </li>
-            <li className="hover:text-sky-400 transition-colors cursor-pointer">
-              Student Grievance Redressal Cell (SGRC)
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-emerald-400" />
+              <span>Admin Block Reception Desk</span>
             </li>
-            <li className="hover:text-sky-400 transition-colors cursor-pointer">
-              Internal Quality Assurance Cell (IQAC)
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-emerald-400" />
+              <span>Central Library Inward Counter</span>
             </li>
-            <li className="hover:text-sky-400 transition-colors cursor-pointer">
-              Good Samaritan Citation Scheme
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
+              <MapPin className="w-3 h-3 text-emerald-400" />
+              <span>Department Lab Security Stations</span>
             </li>
-            <li className="hover:text-sky-400 transition-colors cursor-pointer">
-              Anti-Ragging & Campus Safety Desk
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
+              <Award className="w-3 h-3 text-amber-400" />
+              <span>Good Samaritan Honor Roll</span>
             </li>
           </ul>
         </div>
 
-        {/* Col 4: Official Grievance & Report Helpdesk */}
+        {/* Col 4: RYMEC-iSMART Official Verification Gateway */}
         <div className="space-y-3">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
-            Grievance & Report Helpdesk
+            RYMEC-iSMART Gateway
           </h4>
           <div className="space-y-2 text-xs">
             <p className="text-slate-300 leading-relaxed text-[11px]">
-              For direct complaint filing, status inquiries, or urgent committee escalation:
+              Institutional verification, cryptographic PIN dispatch, and security handover authentication:
             </p>
-            <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-sky-400 block tracking-wider">
-                Direct Grievance Email
+            <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 space-y-1">
+              <span className="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider">
+                Official Gateway Email
               </span>
               <a 
                 href="mailto:rymec.ismart12@gmail.com" 
-                className="font-medium text-white hover:text-sky-300 transition-colors flex items-center gap-1.5 break-all text-xs"
+                className="font-medium text-white hover:text-emerald-300 transition-colors flex items-center gap-1.5 break-all text-xs"
               >
-                <Mail className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+                <Mail className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                 <span>rymec.ismart12@gmail.com</span>
               </a>
             </div>
             <p className="text-[11px] text-slate-400">
-              Operating Hours: Mon–Sat 9:00 AM – 5:00 PM IST
+              Campus Security On-Duty: 24/7 Operations Desk
             </p>
           </div>
         </div>
