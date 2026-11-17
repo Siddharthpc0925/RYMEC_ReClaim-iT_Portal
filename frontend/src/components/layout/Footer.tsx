@@ -16,13 +16,13 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               <img src="/images/vvs-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-bold text-slate-900 dark:text-white text-base">
-              RYMEC <span className="text-indigo-500">ReClaim-iT</span>
+              RYMEC <span className="text-brand-accent">ReClaim-iT</span>
             </span>
           </div>
           <p className="text-xs leading-relaxed">
             Official Campus Lost & Found recovery platform for Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari. Connecting students, verified handovers, and smart campus matching.
           </p>
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-500 font-medium">
+          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
             <Shield className="w-3.5 h-3.5" />
             <span>Secure Handover & Anti-Fraud Protected</span>
           </div>
@@ -35,69 +35,64 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
           </h4>
           <ul className="space-y-1.5 text-xs">
             <li>
-              <button onClick={() => navigate('/browse')} className="hover:text-indigo-400 transition-colors">
+              <button onClick={() => navigate('/browse')} className="hover:text-emerald-400 transition-colors cursor-pointer">
                 Browse Campus Listings
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/report')} className="hover:text-indigo-400 transition-colors">
+              <button onClick={() => navigate('/report')} className="hover:text-emerald-400 transition-colors cursor-pointer">
                 Report Lost or Found Item
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/handover')} className="hover:text-indigo-400 transition-colors">
+              <button onClick={() => navigate('/handover')} className="hover:text-emerald-400 transition-colors cursor-pointer">
                 Scan Handover QR Code
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/dashboard')} className="hover:text-indigo-400 transition-colors">
+              <button onClick={() => navigate('/dashboard')} className="hover:text-emerald-400 transition-colors cursor-pointer">
                 My Claims & Watchlist
               </button>
             </li>
           </ul>
         </div>
 
-        {/* Col 3: Campus Custody & Drop Desks */}
+        {/* Col 3: Institutional Redressal & Cells */}
         <div className="space-y-2">
           <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
-            Campus Drop Desks
+            Institutional Redressal
           </h4>
           <ul className="space-y-1.5 text-xs">
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 text-emerald-400" />
-              <span>Main Security Gate 1 Kiosk</span>
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+              Campus Security & Custody Desk
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 text-emerald-400" />
-              <span>Admin Block Reception Desk</span>
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+              Student Grievance Redressal Cell (SGRC)
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 text-emerald-400" />
-              <span>Central Library Inward Counter</span>
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+              Internal Quality Assurance Cell (IQAC)
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 text-emerald-400" />
-              <span>Department Lab Security Stations</span>
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+              Good Samaritan Citation Scheme
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer flex items-center gap-1.5">
-              <Award className="w-3 h-3 text-amber-400" />
-              <span>Good Samaritan Honor Roll</span>
+            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+              Anti-Ragging & Campus Safety Desk
             </li>
           </ul>
         </div>
 
-        {/* Col 4: RYMEC-iSMART Official Verification Gateway */}
+        {/* Col 4: Official Grievance & Report Helpdesk */}
         <div className="space-y-3">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-white">
-            RYMEC-iSMART Gateway
+            Grievance & Report Helpdesk
           </h4>
           <div className="space-y-2 text-xs">
             <p className="text-slate-300 leading-relaxed text-[11px]">
-              Institutional verification, cryptographic PIN dispatch, and security handover authentication:
+              For direct complaint filing, status inquiries, or urgent committee escalation:
             </p>
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 space-y-1">
+            <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-1">
               <span className="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider">
-                Official Gateway Email
+                Direct Grievance Email
               </span>
               <a 
                 href="mailto:rymec.ismart12@gmail.com" 
@@ -108,7 +103,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               </a>
             </div>
             <p className="text-[11px] text-slate-400">
-              Campus Security On-Duty: 24/7 Operations Desk
+              Operating Hours: Mon–Sat 9:00 AM – 5:00 PM IST
             </p>
           </div>
         </div>
@@ -135,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               className="inline-flex items-center gap-1 rounded-full bg-white/5 hover:bg-white/15 px-2.5 py-1 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-all"
               title={`${m.name} (@${m.user})`}
             >
-              <span className="text-sky-400 font-mono text-[10px]">@</span>
+              <span className="text-emerald-400 font-mono text-[10px]">@</span>
               <span>{m.user}</span>
             </a>
           ))}

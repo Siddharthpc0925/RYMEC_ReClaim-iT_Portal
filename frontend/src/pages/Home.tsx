@@ -7,350 +7,430 @@ import {
   Sparkles,
   Lock,
   MessageSquare,
+  Radio,
   MapPin,
   ArrowRight,
-  Radar,
-  KeyRound,
+  Filter,
   Award,
-  Clock,
+  Layers,
+  HelpCircle,
   ChevronRight,
-  Tag,
-  Building2,
   ExternalLink,
-  Flame
+  Flame,
+  Building2
 } from 'lucide-react';
 import { LandingHero } from '../components/public/LandingHero';
+import { ItemCard } from '../components/items/ItemCard';
 import { api } from '../lib/api';
-import { Item } from '../types';
+import { Item, Location } from '../types';
 
 interface HomeProps {
   navigate: (route: string) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({ navigate }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'ALL' | 'LOST' | 'FOUND'>('ALL');
-  const [recentItems, setRecentItems] = useState<Item[]>([]);
-  const [loadingItems, setLoadingItems] = useState(true);
+  const [items, setItems] = useState<Item[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filterType, setFilterType] = useState<'ALL' | 'LOST' | 'FOUND'>('ALL');
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   useEffect(() => {
-    api.getItems({ limit: 6 })
-      .then((res) => {
-        setRecentItems(res.items || []);
-      })
-      .catch((err) => {
-        console.error('Failed to load recent items:', err);
-      })
-      .finally(() => setLoadingItems(false));
+    Promise.all([
+      api.getItems({ limit: 6 }).catch(() => ({ items: [] })),
+      api.getLocations().catch(() => ({ locations: [] }))
+    ]).then(([itemsRes, locsRes]) => {
+      setItems(itemsRes.items || []);
+      setLocations(locsRes.locations || []);
+      setLoading(false);
+    });
   }, []);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (searchQuery.trim()) params.append('search', searchQuery.trim());
-    if (selectedFilter !== 'ALL') params.append('type', selectedFilter);
-    navigate(`/browse?${params.toString()}`);
-  };
+  const filteredItems = items.filter((item) => {
+    if (filterType === 'ALL') return true;
+    return item.type === filterType;
+  });
 
-  const handleCategorySelect = (category: string) => {
-    navigate(`/browse?category=${encodeURIComponent(category)}`);
-  };
+  const faqs = [
+    {
+      q: 'Where are the official RYMEC drop-desks located?',
+      a: 'Official drop desks are stationed at the Main Security Gate Kiosk (24/7), the Central Library Ground Floor Circulation Counter, the Administrative Block Reception (Room 102), and individual Department Security Desks.'
+    },
+    {
+      q: 'How does the Explainable AI Cross-Matching work?',
+      a: 'Whenever an item is reported, our scoring algorithm cross-evaluates category taxonomy, campus zone proximity, timestamp delta, brand, color tokens, and semantic descriptions to compute a match percentage and detail exactly why items match.'
+    },
+    {
+      q: 'Is my student ID number or contact information visible publicly?',
+      a: 'Never. Student USNs, roll numbers, and contact details remain locked in our zero-knowledge vault. Contact information is only shared when both finder and claimant mutually agree during in-app masked verification.'
+    },
+    {
+      q: 'How does the 6-Digit Handover Verification Code prevent false claims?',
+      a: 'Before receiving property, claimants must correctly answer a private verification question set by the finder (e.g. "What wallpaper is on the lockscreen?"). Upon success, a one-time 6-digit code is generated and verified in person.'
+    }
+  ];
 
   return (
     <div className="space-y-16 pb-16">
       
-      {/* ── 1. Asymmetric Dual-Wing Command Radar Hero ── */}
+      {/* ── 1. Split Terminal Hero with Live Radar HUD ── */}
       <LandingHero
-        onReportLost={() => navigate('/report?type=LOST')}
-        onReportFound={() => navigate('/report?type=FOUND')}
+        onReport={(type) => navigate(`/report${type ? `?type=${type}` : ''}`)}
         onTrack={() => navigate('/handover')}
-        onBrowse={() => navigate('/browse')}
-        onSelectCategory={handleCategorySelect}
+        onBrowse={(cat) => navigate(cat ? `/browse?search=${encodeURIComponent(cat)}` : '/browse')}
+        onSearch={(q) => navigate(`/browse?search=${encodeURIComponent(q)}`)}
       />
 
-      {/* ── 2. Integrated Campus Radar Search & Filter Terminal ── */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 relative z-20">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-3xl border border-emerald-500/30 bg-navy-950/85 backdrop-blur-2xl p-3 sm:p-4 shadow-[0_12px_40px_rgba(0,0,0,0.6)] space-y-3"
-        >
-          {/* Top Filter Chips */}
-          <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-            <div className="flex items-center gap-1.5">
-              <Radar className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-xs font-bold text-white uppercase tracking-wider">
-                Instant Campus Query
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5 text-xs">
-              {(['ALL', 'LOST', 'FOUND'] as const).map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setSelectedFilter(type)}
-                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    selectedFilter === type
-                      ? type === 'LOST'
-                        ? 'bg-rose-500 text-white shadow-md'
-                        : type === 'FOUND'
-                        ? 'bg-emerald-500 text-white shadow-md'
-                        : 'bg-white/20 text-white shadow-md'
-                      : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {type === 'ALL' ? 'All Items' : type === 'LOST' ? 'Lost Property' : 'Found Property'}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Search Form */}
-          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-            <Search className="absolute left-4 w-4 h-4 text-emerald-400 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by keywords: 'ID card CSE', 'Casio FX-991EX', 'HP Charger', 'Keys'..."
-              className="w-full pl-11 pr-28 py-3.5 rounded-2xl text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none border border-white/10 bg-white/5 focus:border-emerald-400/60 transition-all"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-xs font-bold shadow-md hover:from-emerald-500 hover:to-teal-400 active:scale-95 transition-all cursor-pointer"
-            >
-              Scan Radar
-            </button>
-          </form>
-        </motion.div>
-      </div>
-
-      {/* ── 3. Live Campus Radar Feed (Recently Logged Items) ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-white/10">
+      {/* ── 2. Live Campus Recovery Stream (Real Recent Items) ── */}
+      <section className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2 border-b border-white/10">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <h2 className="text-xl sm:text-2xl font-black text-white">
-                Live Campus Recovery Radar
-              </h2>
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>Live Campus Stream</span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Active student reports across Ballari cantonment campus drop desks.
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Recent Campus Recovery Notices
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300">
+              Real-time property notices broadcasted across RYMEC campus departments.
             </p>
           </div>
 
-          <button
-            onClick={() => navigate('/browse')}
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 group"
-          >
-            <span>Open Full Directory ({recentItems.length}+ Items)</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          {/* Stream Filter Pills */}
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shrink-0">
+            <button
+              onClick={() => setFilterType('ALL')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                filterType === 'ALL'
+                  ? 'bg-emerald-500 text-white shadow-md'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              All Notices
+            </button>
+            <button
+              onClick={() => setFilterType('LOST')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                filterType === 'LOST'
+                  ? 'bg-rose-500 text-white shadow-md'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              🔴 Lost Notices
+            </button>
+            <button
+              onClick={() => setFilterType('FOUND')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                filterType === 'FOUND'
+                  ? 'bg-emerald-600 text-white shadow-md'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              🟢 Safe at Drop Desks
+            </button>
+          </div>
         </div>
 
-        {loadingItems ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Items Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="rounded-2xl p-5 border border-white/10 bg-white/5 animate-pulse h-40" />
+              <div key={n} className="h-64 rounded-3xl bg-white/5 border border-white/10 animate-pulse" />
             ))}
           </div>
-        ) : recentItems.length === 0 ? (
-          <div className="text-center py-12 rounded-3xl border border-white/10 bg-white/5 space-y-2">
-            <p className="text-slate-300 font-medium text-sm">No items currently reported on campus radar.</p>
-            <p className="text-xs text-slate-500">Be the first to file a lost item or log found property.</p>
+        ) : filteredItems.length === 0 ? (
+          <div className="rounded-3xl border border-white/15 bg-white/5 p-10 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h4 className="text-base font-bold text-white">All Clear on Campus Radar</h4>
+            <p className="text-xs text-slate-300 max-w-md mx-auto">
+              No unresolved notices found under this filter. If you have lost or found something, file a notice now.
+            </p>
+            <button
+              onClick={() => navigate('/report')}
+              className="mt-2 px-5 py-2 rounded-xl ios-glass-btn-primary text-xs font-bold text-white shadow-md"
+            >
+              Report Item
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {recentItems.slice(0, 6).map((item) => (
-              <div
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+              <ItemCard
                 key={item.id}
+                item={item}
                 onClick={() => navigate(`/items/${item.id}`)}
-                className="group relative rounded-2xl p-5 border border-white/15 bg-navy-950/70 hover:border-emerald-500/40 hover:bg-navy-950/90 transition-all duration-200 cursor-pointer shadow-lg space-y-3 flex flex-col justify-between"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border ${
-                        item.type === 'LOST'
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                      }`}
-                    >
-                      {item.type === 'LOST' ? '🚨 LOST ITEM' : '🎁 FOUND PROPERTY'}
-                    </span>
-                    <span className="text-[11px] text-slate-400 font-mono">
-                      {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Active'}
-                    </span>
-                  </div>
-
-                  <h3 className="font-bold text-white text-base group-hover:text-emerald-300 transition-colors line-clamp-1">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                    {item.description || 'No additional details provided.'}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-300 truncate max-w-[200px]">
-                    <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
-                    <span className="truncate">{item.location_name || 'RYMEC Campus'}</span>
-                  </div>
-                  <span className="text-emerald-400 font-bold text-[11px] group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
-                    Inspect <ChevronRight className="w-3 h-3" />
-                  </span>
-                </div>
-              </div>
+              />
             ))}
           </div>
         )}
-      </div>
 
-      {/* ── 4. The 4-Stage Cryptographic Safe Handover Architecture ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Directory CTA */}
+        <div className="text-center pt-2">
+          <button
+            onClick={() => navigate('/browse')}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs sm:text-sm font-semibold transition-all hover:scale-105 shadow-md cursor-pointer"
+          >
+            <span>Explore Complete Campus Directory</span>
+            <ArrowRight className="w-4 h-4 text-emerald-400" />
+          </button>
+        </div>
+      </section>
+
+      {/* ── 3. Asymmetric Bento Recovery Architecture Grid ── */}
+      <section className="space-y-6">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-            Institutional Custody Protocol
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
+            Institutional Engineering
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-white">
-            How RYMEC ReClaim-iT Secures Property
+            Built Specifically for RYMEC Campus Recovery
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
-            Engineered with zero-knowledge ID protection, explainable similarity scoring, and physical kiosk verification.
+          <p className="text-xs sm:text-sm text-slate-300">
+            Engineered with zero false claims, cryptographic safety protocols, and student privacy.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           
-          {/* Step 1 */}
-          <div className="rounded-2xl p-6 border border-emerald-500/20 bg-navy-950/60 backdrop-blur-xl space-y-3 relative">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center font-black text-emerald-300 text-sm">
-              01
+          {/* Bento Card 1: Explainable AI Matcher (7 Cols) */}
+          <div className="md:col-span-7 rounded-3xl border border-emerald-400/30 bg-gradient-to-br from-emerald-950/30 via-navy-950/70 to-black/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <Sparkles className="w-6 h-6 text-emerald-400" />
+              </div>
+              <span className="text-xs font-mono font-bold text-emerald-300 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/30">
+                Algorithmic Engine
+              </span>
             </div>
-            <h3 className="font-bold text-white text-base">Neural Match Engine</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Real-time multi-factor algorithmic matching compares item category, campus zone proximity, date gap, brand, and visual description synonyms.
-            </p>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">
+                Explainable Multi-Vector AI Matching
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Rather than an opaque black box, our algorithm computes a weighted multi-factor match score and shows both parties the exact reason why items correspond.
+              </p>
+            </div>
+
+            {/* Visual Vector Scoring Simulation */}
+            <div className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-300 font-medium">Category &amp; Taxonomy Similarity</span>
+                <span className="text-emerald-400 font-mono font-bold">100%</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-400 rounded-full w-full" />
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-slate-300 font-medium">Campus Zone Proximity (Library Block)</span>
+                <span className="text-teal-300 font-mono font-bold">95%</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-teal-400 rounded-full w-[95%]" />
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-slate-300 font-medium">Temporal Delta (&lt; 2 Hours Apart)</span>
+                <span className="text-cyan-300 font-mono font-bold">90%</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-cyan-400 rounded-full w-[90%]" />
+              </div>
+            </div>
           </div>
 
-          {/* Step 2 */}
-          <div className="rounded-2xl p-6 border border-teal-500/20 bg-navy-950/60 backdrop-blur-xl space-y-3 relative">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center font-black text-teal-300 text-sm">
-              02
+          {/* Bento Card 2: Vault-Grade Privacy (5 Cols) */}
+          <div className="md:col-span-5 rounded-3xl border border-white/20 bg-gradient-to-br from-white/10 via-black/50 to-black/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl flex flex-col justify-between space-y-4">
+            <div className="space-y-4">
+              <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30 w-fit">
+                <Lock className="w-6 h-6 text-amber-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white">
+                Zero-Knowledge Privacy Vault
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Student USNs, phone numbers, and hostel rooms are protected. If an ID card is turned in, the owner is alerted directly without broadcasting credentials publicly.
+              </p>
             </div>
-            <h3 className="font-bold text-white text-base">Zero-Knowledge Proof</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              To prevent fraudulent claims, claimants must correctly answer secret verification questions set by the finder before any meetup is arranged.
-            </p>
+
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-xs text-amber-300 font-medium flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-400" />
+              <span>Full compliance with institutional data governance</span>
+            </div>
           </div>
 
-          {/* Step 3 */}
-          <div className="rounded-2xl p-6 border border-cyan-500/20 bg-navy-950/60 backdrop-blur-xl space-y-3 relative">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center font-black text-cyan-300 text-sm">
-              03
+          {/* Bento Card 3: Cryptographic QR Handover (5 Cols) */}
+          <div className="md:col-span-5 rounded-3xl border border-white/20 bg-gradient-to-br from-cyan-950/20 via-black/50 to-black/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl flex flex-col justify-between space-y-4">
+            <div className="space-y-4">
+              <div className="p-3 rounded-2xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 w-fit">
+                <ShieldCheck className="w-6 h-6 text-cyan-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white">
+                6-Digit Verification Protocol
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Zero false handovers. The claimant must answer a private security question to unlock a time-limited 6-digit TOTP cryptographic code for in-person collection.
+              </p>
             </div>
-            <h3 className="font-bold text-white text-base">6-Digit Handover PIN</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Once verified, the RYMEC-iSMART security gateway issues an encrypted 6-digit one-time PIN required to close the recovery loop.
-            </p>
+
+            <button
+              onClick={() => navigate('/handover')}
+              className="w-full py-2.5 rounded-xl border border-cyan-400/30 bg-cyan-500/20 text-cyan-200 text-xs font-bold hover:bg-cyan-500/30 transition-colors text-center cursor-pointer"
+            >
+              Open Handover Terminal ➔
+            </button>
           </div>
 
-          {/* Step 4 */}
-          <div className="rounded-2xl p-6 border border-amber-500/20 bg-navy-950/60 backdrop-blur-xl space-y-3 relative">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center font-black text-amber-300 text-sm">
-              04
+          {/* Bento Card 4: Karma & Recognition Certificate (7 Cols) */}
+          <div className="md:col-span-7 rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-950/25 via-navy-950/70 to-black/80 p-6 sm:p-8 backdrop-blur-2xl shadow-xl space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <Award className="w-6 h-6 text-amber-400" />
+              </div>
+              <span className="text-xs font-mono font-bold text-amber-300 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-400/30">
+                Placement Citation
+              </span>
             </div>
-            <h3 className="font-bold text-white text-base">Kiosk Handover &amp; Citation</h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Property is handed over at campus security desks. Finders are awarded +50 Karma Points and official downloadable Good Samaritan Citation certificates.
-            </p>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-white">
+                Student Honor Citations &amp; Karma Points
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Students who return lost property earn verified karma points and an official College Citation Certificate signed by the Principal for their academic portfolio.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={() => navigate('/certificate')}
+                className="px-5 py-2.5 rounded-xl bg-amber-400/20 border border-amber-400/40 text-amber-200 text-xs font-bold hover:bg-amber-400/30 transition-colors cursor-pointer"
+              >
+                View Sample Certificate
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-xs font-medium hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                Check My Karma Score
+              </button>
+            </div>
           </div>
 
         </div>
-      </div>
+      </section>
 
-      {/* ── 5. Campus Drop Desks & Custody Kiosks ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-white/10">
-          <div>
-            <div className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-emerald-400" />
-              <h2 className="text-xl sm:text-2xl font-black text-white">
-                Campus Drop Desks &amp; Custody Stations
-              </h2>
+      {/* ── 4. Campus Safe Drop Desks Quick Map Strip ── */}
+      <section className="rounded-3xl border border-white/15 bg-navy-950/90 p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              <Building2 className="w-4 h-4 text-emerald-400" />
+              <span>Campus Drop Kiosks</span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Secure physical locations to safely deposit found items or collect verified belongings.
+            <h3 className="text-xl sm:text-2xl font-black text-white">
+              Official Physical Handover Stations
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300">
+              Drop found property at any monitored kiosk. Staff will log and safeguard it immediately.
             </p>
           </div>
 
           <button
             onClick={() => navigate('/hotspots')}
-            className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 group"
+            className="px-5 py-2.5 rounded-xl ios-glass-btn-primary text-xs font-bold text-white shadow-md self-start sm:self-auto cursor-pointer"
           >
-            <span>Interactive Campus Grid</span>
-            <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            Open Interactive Campus Map ➔
           </button>
         </div>
 
+        {/* Drop Kiosks Quick Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            {
-              name: 'Main Security Gate 1',
-              zone: 'Campus Entrance',
-              timing: '24/7 Active Desk',
-              slug: 'main-gate-security'
-            },
-            {
-              name: 'Admin Block Reception',
-              zone: 'Counter 03',
-              timing: '9:00 AM – 5:00 PM',
-              slug: 'admin-block'
-            },
-            {
-              name: 'Central Library Inward',
-              zone: 'Ground Floor Desk',
-              timing: '8:30 AM – 8:00 PM',
-              slug: 'central-library'
-            },
-            {
-              name: 'Mechanical Workshop Kiosk',
-              zone: 'Security Post 2',
-              timing: '9:00 AM – 5:30 PM',
-              slug: 'mech-block'
-            }
-          ].map((kiosk, idx) => (
-            <div
-              key={idx}
-              onClick={() => navigate(`/near/${kiosk.slug}`)}
-              className="p-5 rounded-2xl border border-white/10 bg-navy-950/60 hover:border-emerald-500/40 hover:bg-navy-950/80 transition-all cursor-pointer space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
-                  {kiosk.timing}
-                </span>
-                <MapPin className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition-colors" />
-              </div>
-
-              <h4 className="font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">
-                {kiosk.name}
-              </h4>
-
-              <p className="text-xs text-slate-400">
-                Zone: {kiosk.zone}
-              </p>
-
-              <div className="pt-2 text-[11px] font-semibold text-emerald-400/80 group-hover:text-emerald-300 flex items-center gap-1">
-                <span>View Custody Items</span>
-                <ChevronRight className="w-3 h-3" />
-              </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1 hover:border-emerald-400/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white">Main Security Gate</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             </div>
-          ))}
+            <p className="text-[11px] text-slate-400">Cantonment Entrance · Open 24/7</p>
+            <p className="text-[11px] text-emerald-300 font-semibold pt-1">Station 01</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1 hover:border-emerald-400/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white">Central Library Kiosk</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <p className="text-[11px] text-slate-400">Ground Floor Circulation Counter</p>
+            <p className="text-[11px] text-emerald-300 font-semibold pt-1">Station 02</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1 hover:border-emerald-400/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white">Administrative Block</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <p className="text-[11px] text-slate-400">Room 102 · Student Affairs Desk</p>
+            <p className="text-[11px] text-emerald-300 font-semibold pt-1">Station 03</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1 hover:border-emerald-400/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white">Engineering Labs Core</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <p className="text-[11px] text-slate-400">Mech &amp; CSE Department Desks</p>
+            <p className="text-[11px] text-emerald-300 font-semibold pt-1">Station 04</p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* ── 5. Safety & Verification FAQ Accordion ── */}
+      <section className="max-w-4xl mx-auto space-y-6">
+        <div className="text-center space-y-1">
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
+            Institutional Guidelines
+          </span>
+          <h2 className="text-2xl font-black text-white">
+            Frequently Asked Recovery Questions
+          </h2>
+        </div>
+
+        <div className="space-y-3">
+          {faqs.map((faq, idx) => {
+            const isOpen = activeFaq === idx;
+            return (
+              <div
+                key={idx}
+                className="rounded-2xl border border-white/15 bg-navy-950/60 backdrop-blur-xl overflow-hidden transition-colors"
+              >
+                <button
+                  type="button"
+                  onClick={() => setActiveFaq(isOpen ? null : idx)}
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 cursor-pointer"
+                >
+                  <span className="text-xs sm:text-sm font-bold text-white">
+                    {faq.q}
+                  </span>
+                  <ChevronRight
+                    className={`w-4 h-4 text-emerald-400 shrink-0 transition-transform ${
+                      isOpen ? 'rotate-90' : ''
+                    }`}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 text-xs text-slate-300 leading-relaxed border-t border-white/5 pt-3">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
     </div>
   );

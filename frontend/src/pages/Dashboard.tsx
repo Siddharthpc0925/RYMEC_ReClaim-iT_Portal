@@ -915,7 +915,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
               </form>
             </div>
 
-            {/* Column 2: Password Security & Support */}
+            {/* Column 2: Password Security & Grievance Info */}
             <div className="space-y-6">
               {/* Security & Password Card */}
               <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-5">
@@ -1018,7 +1018,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ navigate }) => {
               <div className="glass rounded-3xl p-6 border border-white/20 shadow-xl space-y-3">
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-emerald-400" />
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Campus Custody & Support Desk</h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Campus Custody &amp; Recovery Desk</h4>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   For secure drop desk inquiries, unclaimed property queries, or verification assistance:
