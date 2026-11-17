@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-sky-100 to-sky-200 bg-clip-text text-transparent">
+              <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-emerald-100 to-teal-200 bg-clip-text text-transparent">
                 RYMEC <span className="text-brand-accent">ReClaim-iT</span>
               </span>
               <span className="rounded-full bg-amber-400/15 border border-amber-300/30 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
@@ -137,13 +137,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
                     className="absolute right-0 mt-3 w-80 sm:w-96 rounded-3xl ios-glass-card p-4 shadow-2xl z-50 text-white space-y-3"
                   >
                     <div className="flex items-center justify-between pb-2 border-b border-white/10">
-                      <span className="text-xs font-bold uppercase tracking-wider text-sky-300">
+                      <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
                         Campus Recovery Alerts
                       </span>
                       {unreadCount > 0 && (
                         <button
                           onClick={handleMarkAllRead}
-                          className="text-[10px] text-sky-400 hover:underline flex items-center gap-1 font-semibold"
+                          className="text-[10px] text-emerald-400 hover:underline flex items-center gap-1 font-semibold"
                         >
                           <CheckCircle className="w-3 h-3" /> Mark all read
                         </button>
@@ -166,13 +166,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
                             className={`p-2.5 rounded-xl text-xs transition-colors cursor-pointer border ${
                               n.is_read
                                 ? 'bg-white/5 border-transparent opacity-75'
-                                : 'bg-brand-royal/20 border-blue-400/40 text-white'
+                                : 'bg-brand-royal/20 border-emerald-400/40 text-white'
                             }`}
                           >
                             <p className="font-medium text-slate-100">{n.message}</p>
                             <div className="flex items-center justify-between mt-1 text-[10px] text-silver-400">
                               <span>{new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                              {n.link && <span className="text-sky-300 flex items-center gap-0.5">Open Record <ExternalLink className="w-2.5 h-2.5" /></span>}
+                              {n.link && <span className="text-emerald-300 flex items-center gap-0.5">Open Record <ExternalLink className="w-2.5 h-2.5" /></span>}
                             </div>
                           </div>
                         ))
@@ -193,7 +193,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
             {theme === 'dark' ? (
               <Sun className="h-4 w-4 text-amber-300" />
             ) : (
-              <Moon className="h-4 w-4 text-sky-300" />
+              <Moon className="h-4 w-4 text-emerald-300" />
             )}
           </button>
 

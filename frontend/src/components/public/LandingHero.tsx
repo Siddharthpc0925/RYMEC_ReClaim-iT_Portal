@@ -63,14 +63,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             Rao Bahadur Y. Mahabaleswarappa Engineering College
           </h2>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mt-1 bg-gradient-to-b from-white via-slate-50 to-sky-200 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(255,255,255,0.22)]">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mt-1 bg-gradient-to-b from-white via-emerald-100 to-teal-300 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(16,185,129,0.3)]">
             RYMEC ReClaim-iT
           </h1>
         </div>
 
         {/* Campus Location Pin */}
-        <div className="flex items-center justify-center gap-1.5 mb-6 text-sky-200/90 text-xs font-medium">
-          <MapPin className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+        <div className="flex items-center justify-center gap-1.5 mb-6 text-emerald-200/90 text-xs font-medium">
+          <MapPin className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
           <span>V.V. Sangha Campus, Cantonment, Ballari — 583 104, Karnataka</span>
         </div>
 
@@ -94,7 +94,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             onClick={onTrack}
             className="ios-glass-btn-secondary rounded-2xl px-6 py-3.5 text-sm font-semibold text-white flex items-center gap-2 cursor-pointer shadow-md active:scale-95 transition-transform"
           >
-            <QrCode className="h-4 w-4 text-sky-400" />
+            <QrCode className="h-4 w-4 text-emerald-400" />
             <span>Verify Handover QR</span>
           </button>
 

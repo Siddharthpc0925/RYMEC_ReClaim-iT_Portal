@@ -65,7 +65,7 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
       <div className="max-w-5xl mx-auto px-4">
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="ios-glass-card p-6 rounded-3xl border border-white/20 shadow-xl space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-sky-500/20 text-sky-300 flex items-center justify-center font-black">
+            <div className="w-10 h-10 rounded-2xl bg-teal-500/20 text-teal-300 flex items-center justify-center font-black">
               01
             </div>
             <h3 className="font-bold text-base text-white">Explainable AI Matching</h3>
@@ -85,7 +85,7 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
           </div>
 
           <div className="ios-glass-card p-6 rounded-3xl border border-white/20 shadow-xl space-y-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center font-black">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-black">
               03
             </div>
             <h3 className="font-bold text-base text-white">Student Privacy First</h3>
