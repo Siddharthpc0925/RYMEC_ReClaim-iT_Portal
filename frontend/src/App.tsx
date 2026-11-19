@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
-import { Navbar } from './components/layout/Navbar';
-import { LiquidBottomNav } from './components/layout/LiquidBottomNav';
+import { Sidebar } from './components/layout/Sidebar';
 import { Footer } from './components/layout/Footer';
-import { FloatingParticles } from './components/3d/FloatingParticles';
-import { LiquidBackground } from './components/layout/LiquidBackground';
 import { RoundGlassAuth } from './components/auth/RoundGlassAuth';
 import { AboutCollege } from './components/public/AboutCollege';
 import { CampusMapSvg } from './components/campus/CampusMapSvg';
 
 import { Home } from './pages/Home';
-import { Browse } from './pages/Browse';
-import { Report } from './pages/Report';
+import { ReportLost } from './pages/ReportLost';
+import { ReportFound } from './pages/ReportFound';
 import { ItemDetail } from './pages/ItemDetail';
+import { MyItems } from './pages/MyItems';
 import { Handover } from './pages/Handover';
-import { Dashboard } from './pages/Dashboard';
-import { NearLocation } from './pages/NearLocation';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { AdminPosters } from './pages/AdminPosters';
-import { Leaderboard } from './pages/Leaderboard';
 import { Certificate } from './pages/Certificate';
 import { NotFound } from './pages/NotFound';
 import { api } from './lib/api';
@@ -54,41 +49,8 @@ export const App: React.FC = () => {
     }).catch(console.error);
   }, []);
 
-  // Parse path and query params
   const [pathname, searchStr] = currentPath.split('?');
   const searchParams = new URLSearchParams(searchStr || '');
-
-  // Map path to active tab for Navbar highlighting
-  let currentTab = 'home';
-  if (pathname === '/report') currentTab = 'report';
-  else if (pathname === '/browse' || pathname.startsWith('/items/')) currentTab = 'browse';
-  else if (pathname === '/handover') currentTab = 'handover';
-  else if (pathname === '/about') currentTab = 'about';
-  else if (pathname === '/dashboard') currentTab = 'dashboard';
-  else if (pathname.startsWith('/admin')) currentTab = 'admin';
-
-  const handleTabChange = (tab: string) => {
-    if (tab === 'home') navigate('/');
-    else if (tab === 'report') navigate('/report');
-    else if (tab === 'browse') navigate('/browse');
-    else if (tab === 'handover') navigate('/handover');
-    else if (tab === 'about') navigate('/about');
-    else if (tab === 'dashboard') {
-      if (!user) {
-        setAuthOpen(true);
-      } else {
-        navigate('/dashboard');
-      }
-    } else if (tab === 'admin') {
-      if (!user || user.role !== 'ADMIN') {
-        setAuthOpen(true);
-      } else {
-        navigate('/admin');
-      }
-    } else {
-      navigate('/' + tab);
-    }
-  };
 
   useEffect(() => {
     if (pathname === '/login' || pathname === '/register') {
@@ -98,45 +60,57 @@ export const App: React.FC = () => {
 
   let pageContent: React.ReactNode = null;
 
-  if (pathname === '/') {
+  if (pathname === '/' || pathname === '/browse') {
     pageContent = <Home navigate={navigate} />;
-  } else if (pathname === '/browse') {
-    pageContent = <Browse navigate={navigate} initialSearch={searchParams.get('search') || ''} />;
+  } else if (pathname === '/report-lost') {
+    pageContent = <ReportLost navigate={navigate} />;
+  } else if (pathname === '/report-found') {
+    pageContent = <ReportFound navigate={navigate} />;
   } else if (pathname === '/report') {
-    pageContent = (
-      <Report
-        navigate={navigate}
-        defaultType={(searchParams.get('type') as any) || 'LOST'}
-        defaultLocationSlug={searchParams.get('locationSlug') || ''}
-      />
-    );
+    const t = searchParams.get('type');
+    if (t === 'FOUND') {
+      pageContent = <ReportFound navigate={navigate} />;
+    } else {
+      pageContent = <ReportLost navigate={navigate} />;
+    }
   } else if (pathname.startsWith('/items/')) {
     const id = pathname.replace('/items/', '');
     pageContent = <ItemDetail itemId={id} navigate={navigate} />;
-  } else if (pathname.startsWith('/near/')) {
-    const slug = pathname.replace('/near/', '');
-    pageContent = <NearLocation slug={slug} navigate={navigate} />;
+  } else if (pathname === '/my-items' || pathname === '/dashboard') {
+    if (!user) {
+      pageContent = (
+        <div className="page-wrap text-center py-16">
+          <h2 className="text-2xl font-bold text-white mb-2">Sign in to view your items</h2>
+          <p className="text-slate-400 mb-6">Manage your reports, view pending claims, and verify handovers.</p>
+          <button className="button button-primary" onClick={() => setAuthOpen(true)}>
+            Sign in / Register
+          </button>
+        </div>
+      );
+    } else {
+      pageContent = <MyItems navigate={navigate} />;
+    }
   } else if (pathname === '/handover') {
     pageContent = <Handover navigate={navigate} />;
   } else if (pathname === '/hotspots') {
     pageContent = (
-      <div className="space-y-8 pb-16">
+      <div className="page-wrap space-y-8">
         <div className="space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400 uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wider">
             <MapPin className="w-3.5 h-3.5" />
             <span>Interactive Campus Grid</span>
           </div>
           <h1 className="text-3xl font-extrabold text-white">
-            RYMEC Campus Zones & Drop Desks
+            RYMEC Campus Zones &amp; Drop Desks
           </h1>
           <p className="text-xs sm:text-sm text-slate-300">
-            Click on any campus building or security kiosk to see all recovered items held at that location.
+            Official safe handover stations and monitored custody desks across RYMEC Ballari.
           </p>
         </div>
 
         <CampusMapSvg
           locations={locations}
-          onSelectLocation={(loc) => navigate(`/near/${loc.slug}`)}
+          onSelectLocation={(loc) => navigate(`/items?location=${loc.name}`)}
           isHeatmap={true}
         />
 
@@ -144,18 +118,18 @@ export const App: React.FC = () => {
           {locations.map((loc) => (
             <div
               key={loc.id}
-              onClick={() => navigate(`/near/${loc.slug}`)}
-              className="ios-glass-card p-5 rounded-2xl cursor-pointer hover:border-sky-400/50 transition-all flex items-center justify-between group"
+              onClick={() => navigate(`/items?location=${loc.name}`)}
+              className="surface-card p-4 rounded-2xl cursor-pointer hover:border-emerald-400/50 transition-all flex items-center justify-between group"
             >
               <div>
-                <h4 className="font-bold text-white text-sm group-hover:text-sky-300 transition-colors">
+                <h4 className="font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">
                   {loc.name}
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">
                   Zone: {loc.parent_zone || 'Campus Core'}
                 </p>
               </div>
-              <Navigation className="w-4 h-4 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
+              <Navigation className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
             </div>
           ))}
         </div>
@@ -163,61 +137,38 @@ export const App: React.FC = () => {
     );
   } else if (pathname === '/about') {
     pageContent = <AboutCollege />;
-  } else if (pathname === '/dashboard') {
-    pageContent = <Dashboard navigate={navigate} />;
   } else if (pathname === '/certificate') {
     pageContent = <Certificate navigate={navigate} />;
   } else if (pathname === '/admin') {
     pageContent = <AdminDashboard navigate={navigate} />;
   } else if (pathname === '/admin/posters') {
     pageContent = <AdminPosters navigate={navigate} />;
-  } else if (pathname === '/login' || pathname === '/register') {
-    pageContent = <Home navigate={navigate} />;
   } else {
     pageContent = <NotFound navigate={navigate} />;
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col font-sans selection:bg-brand-royal selection:text-white bg-navy-950 text-slate-100">
-      {/* 3D Ambient Floating Particles (like rymec-grievance-desk) */}
-      <FloatingParticles />
-
-      {/* Liquid Glass Background */}
-      <LiquidBackground />
-
-      {/* Sticky Top Navbar */}
-      <Navbar
-        currentTab={currentTab}
-        setCurrentTab={handleTabChange}
+    <div className="app-shell">
+      {/* ── Reference 250px Sticky Sidebar Navigation ── */}
+      <Sidebar
+        currentPath={pathname}
+        navigate={navigate}
         onOpenAuth={() => setAuthOpen(true)}
       />
 
-      {/* Main Container */}
-      <main className="flex-1 w-full relative z-10 pb-24 lg:pb-12">
-        {pathname === '/' ? (
-          pageContent
-        ) : (
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
-            {pageContent}
-          </div>
-        )}
+      {/* ── Main Scrollable Content Area ── */}
+      <main className="main-content" id="main-content">
+        {pageContent}
+
+        {/* ── Institutional Footer ── */}
+        <Footer navigate={navigate} />
       </main>
 
-      {/* Liquid Glass Bottom Nav Bar (Mobile iOS Style) */}
-      <LiquidBottomNav
-        currentTab={currentTab}
-        setCurrentTab={handleTabChange}
-        onOpenAuth={() => setAuthOpen(true)}
-      />
-
-      {/* Round Glass Login / Register Modal with 1-Click Quick Demo Access */}
+      {/* ── Modal for RYMEC Mail ID Auth & OTP ── */}
       <RoundGlassAuth
         isOpen={authOpen}
         onClose={() => setAuthOpen(false)}
       />
-
-      {/* Comprehensive Institutional Footer */}
-      <Footer navigate={navigate} />
     </div>
   );
 };
