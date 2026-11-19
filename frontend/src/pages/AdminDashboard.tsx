@@ -49,7 +49,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [claimsQueue, setClaimsQueue] = useState<any[]>([]);
   const [abuseReports, setAbuseReports] = useState<any[]>([]);
-  const [usersList, setUsersList] = useState<any[]>([]);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [auditFilter, setAuditFilter] = useState('');
   const [loading, setLoading] = useState(true);
@@ -58,11 +57,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, claimsRes, abuseRes, usersRes, locRes, logsRes] = await Promise.all([
+      const [statsRes, claimsRes, abuseRes, locRes, logsRes] = await Promise.all([
         api.getAdminStats(),
         api.getAdminClaims(),
         api.getAdminAbuseReports(),
-        api.getAdminUsers(),
         api.getLocations(),
         api.getAdminAuditLogs().catch(() => ({ logs: [] })),
       ]);
@@ -70,7 +68,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
       setStats(statsRes);
       setClaimsQueue(claimsRes.claims || []);
       setAbuseReports(abuseRes.reports || []);
-      setUsersList(usersRes.users || []);
       setLocations(locRes.locations || []);
       setAuditLogs(logsRes.logs || []);
     } catch (err: any) {
@@ -104,18 +101,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
       setAbuseReports((prev) => prev.map((a) => (a.id === id ? { ...a, resolved: true } : a)));
     } catch (err) {
       toast('Failed to resolve report', 'error');
-    }
-  };
-
-  const handleToggleFlag = async (userId: string) => {
-    try {
-      const res = await api.toggleUserFlag(userId);
-      toast(res.message, 'info');
-      setUsersList((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, flagged: !u.flagged } : u))
-      );
-    } catch (err) {
-      toast('Failed to toggle flag', 'error');
     }
   };
 
@@ -382,95 +367,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
         )}
       </div>
 
-      {/* ─── 8. USER CREDENTIALS & PROFILES DATABASE ─── */}
-      <div className="p-5 rounded-2xl border border-white/[0.08] bg-[#0c1421]/80 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h3 className="font-medium text-xs text-white flex items-center gap-2">
-              <Users className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Registered User Ledger</span>
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium bg-white/[0.06] text-slate-300">
-                {usersList.length} accounts
-              </span>
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Live records from Neon Cloud PostgreSQL database
-            </p>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto rounded-lg border border-white/[0.06]">
-          <table className="w-full text-xs text-left">
-            <thead className="text-[11px] font-medium text-slate-400 border-b border-white/[0.06] bg-white/[0.02]">
-              <tr>
-                <th className="py-2.5 px-3">Name &amp; Role</th>
-                <th className="py-2.5 px-3">Email Address</th>
-                <th className="py-2.5 px-3">USN / Employee ID</th>
-                <th className="py-2.5 px-3">Department / Branch</th>
-                <th className="py-2.5 px-3">Accommodation</th>
-                <th className="py-2.5 px-3">Trust Points</th>
-                <th className="py-2.5 px-3">Verification</th>
-                <th className="py-2.5 px-3 text-right">Status / Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.04]">
-              {usersList.map((u) => (
-                <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-2.5 px-3">
-                    <div className="font-medium text-white">{u.name}</div>
-                    <span className="inline-block text-[10px] font-mono text-slate-400 mt-0.5">
-                      {u.role}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-3 font-mono text-slate-300">{u.email}</td>
-                  <td className="py-2.5 px-3 font-mono text-slate-400">{u.roll_no}</td>
-                  <td className="py-2.5 px-3 text-slate-300">
-                    <div>{u.branch || 'General'}</div>
-                    <span className="text-[10px] text-slate-400 block font-mono">
-                      {u.section ? `Sec ${u.section}` : ''} {u.academic_year ? `• ${u.academic_year}` : ''}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-3">
-                    <span className="text-slate-300 text-xs">
-                      {u.accommodation || 'Day Scholar'}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-3 font-mono tabular-nums text-slate-200">
-                    {u.points || 0} pts
-                    {u.fraud_claims > 0 && (
-                      <span className="text-rose-400 text-[10px] block font-mono">({u.fraud_claims} fraud)</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-3">
-                    {u.is_verified ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
-                        <CheckCircle2 className="w-3 h-3" />
-                        Verified
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-amber-400 font-medium">Pending OTP</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 px-3 text-right">
-                    <button
-                      onClick={() => handleToggleFlag(u.id)}
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-medium uppercase cursor-pointer transition-colors ${
-                        u.flagged
-                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                          : 'border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] text-slate-300'
-                      }`}
-                    >
-                      {u.flagged ? 'Flagged' : 'Active'}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* ─── 9. CUSTODY & ACTIVITY AUDIT TRAIL ─── */}
+      {/* ─── 8. CUSTODY & ACTIVITY AUDIT TRAIL ─── */}
       <div className="p-5 rounded-2xl border border-white/[0.08] bg-[#0c1421]/80 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
