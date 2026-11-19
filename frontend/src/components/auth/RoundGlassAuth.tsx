@@ -251,8 +251,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
         {/* Step Indicator on Register */}
         {mode === 'register' && (
           <div className="flex items-center justify-center gap-2 text-[11px] font-semibold">
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-sky-400/40 bg-sky-500/15 text-sky-300">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-sky-400 text-navy-950 font-bold text-[10px]">
+            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-emerald-400/40 bg-emerald-500/15 text-emerald-300">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-400 text-navy-950 font-bold text-[10px]">
                 1
               </span>
               Academic Details
@@ -296,7 +296,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-sky-400" />
+                <Mail className="w-3.5 h-3.5 text-emerald-400" />
                 <span>College / Personal Email ID</span>
               </label>
               <input
@@ -305,13 +305,13 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
                 placeholder="e.g. student@rymec.edu.in or your.name@gmail.com"
-                className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                className="w-full px-4 py-3 rounded-2xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-sky-400" />
+                <Lock className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Password</span>
               </label>
               <div className="relative">
@@ -321,7 +321,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   placeholder="Enter your account password"
-                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-white/5 border border-white/15 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
                 />
                 <button
                   type="button"
@@ -354,7 +354,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
             {/* Full Name */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                <User className="w-3.5 h-3.5 text-sky-400" />
+                <User className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Full Legal Name</span>
               </label>
               <input
@@ -364,21 +364,21 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                 value={formData.full_name}
                 onChange={handleFieldChange}
                 placeholder="e.g. Rahul Patil"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
               />
             </div>
 
             {/* Institutional Role Selector: ONLY Student or Faculty */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Institutional Role</span>
               </label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleFieldChange}
-                className="w-full rounded-xl border border-white/15 bg-navy-900 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                className="w-full rounded-xl border border-white/15 bg-navy-900 py-2.5 px-3 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
               >
                 <option value="STUDENT">Student</option>
                 <option value="FACULTY">Faculty</option>
@@ -387,8 +387,8 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
 
             {/* ─── STUDENT FIELDS ─── */}
             {formData.role === 'STUDENT' && (
-              <div className="rounded-2xl border border-sky-400/20 bg-sky-500/5 p-3.5 space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-300">
+              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/5 p-3.5 space-y-3">
+                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-300">
                   <GraduationCap className="h-4 w-4" />
                   <span>Current Studying Details</span>
                 </div>
@@ -401,7 +401,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       name="branch"
                       value={formData.branch}
                       onChange={handleFieldChange}
-                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                     >
                       <option value="Computer Science & Engineering">Computer Science (CSE)</option>
                       <option value="Data Science">Data Science (CSE-DS)</option>
@@ -421,7 +421,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       name="section"
                       value={formData.section}
                       onChange={handleFieldChange}
-                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                     >
                       <option value="A">Section A</option>
                       <option value="B">Section B</option>
@@ -439,7 +439,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       name="academic_year"
                       value={formData.academic_year}
                       onChange={handleFieldChange}
-                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                      className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                     >
                       <option value="1st Year">1st Year</option>
                       <option value="2nd Year">2nd Year</option>
@@ -457,7 +457,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       value={formData.usn_roll}
                       onChange={handleFieldChange}
                       placeholder="e.g. 3BR21CS089"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 uppercase"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 uppercase"
                     />
                   </div>
                 </div>
@@ -465,14 +465,14 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                 {/* Accommodation Box: Dayscholar, PG, Hostel */}
                 <div>
                   <label className="block text-[11px] font-semibold text-slate-300 mb-1 flex items-center gap-1">
-                    <HomeIcon className="w-3 h-3 text-sky-400" />
+                    <HomeIcon className="w-3 h-3 text-emerald-400" />
                     <span>Accommodation</span>
                   </label>
                   <select
                     name="accommodation"
                     value={formData.accommodation}
                     onChange={handleFieldChange}
-                    className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                    className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                   >
                     <option value="Day Scholar">Day Scholar</option>
                     <option value="PG">PG</option>
@@ -497,7 +497,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                     name="branch"
                     value={formData.branch}
                     onChange={handleFieldChange}
-                    className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-sky-400 cursor-pointer"
+                    className="w-full rounded-xl border border-white/10 bg-navy-800 py-1.5 px-2.5 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
                   >
                     <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
                     <option value="Data Science">Data Science (CSE-DS)</option>
@@ -521,7 +521,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       value={formData.usn_roll}
                       onChange={handleFieldChange}
                       placeholder="e.g. FAC-CSE-102"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 uppercase"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 uppercase"
                     />
                   </div>
 
@@ -533,7 +533,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                       value={formData.designation}
                       onChange={handleFieldChange}
                       placeholder="e.g. Assistant Professor"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400"
                     />
                   </div>
                 </div>
@@ -543,7 +543,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
             {/* Email Address with RYMEC-iSMART Dispatch Notice (Replaces Phone) */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                <Mail className="w-3.5 h-3.5 text-sky-400" />
+                <Mail className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Email Address (College / Personal Gmail)</span>
               </label>
               <input
@@ -553,11 +553,11 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                 value={formData.email}
                 onChange={handleFieldChange}
                 placeholder="e.g. student@rymec.edu.in or your.name@gmail.com"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
               />
               <span className="text-[10px] text-slate-400 flex items-center gap-1 pt-0.5">
                 <span>OTP will be dispatched via RYMEC-iSMART</span>
-                <span className="text-sky-300 font-mono">(rymec.ismart12@gmail.com)</span>
+                <span className="text-emerald-300 font-mono">(rymec.ismart12@gmail.com)</span>
               </span>
             </div>
 
@@ -565,7 +565,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                  <Lock className="w-3.5 h-3.5 text-sky-400" />
+                  <Lock className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Password</span>
                 </label>
                 <div className="relative">
@@ -576,7 +576,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                     value={formData.password}
                     onChange={handleFieldChange}
                     placeholder="Min 6 characters"
-                    className="w-full px-3.5 py-2.5 pr-8 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                    className="w-full px-3.5 py-2.5 pr-8 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
                   />
                   <button
                     type="button"
@@ -590,7 +590,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
 
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                  <Lock className="w-3.5 h-3.5 text-sky-400" />
+                  <Lock className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Confirm Password</span>
                 </label>
                 <div className="relative">
@@ -601,7 +601,7 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                     value={formData.confirm_password}
                     onChange={handleFieldChange}
                     placeholder="Repeat password"
-                    className="w-full px-3.5 py-2.5 pr-8 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 transition-colors"
+                    className="w-full px-3.5 py-2.5 pr-8 rounded-xl bg-white/5 border border-white/15 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 transition-colors"
                   />
                   <button
                     type="button"

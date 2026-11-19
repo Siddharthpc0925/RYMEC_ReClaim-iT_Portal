@@ -1,15 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Check, ImagePlus, Info, MapPin, Upload, Sparkles, ShieldCheck } from 'lucide-react';
-import { Location } from '../../types';
+import { Location, CAMPUS_CATEGORIES } from '../../types';
 
-const categories = [
-  'Electronics',
-  'School supplies',
-  'Bags & accessories',
-  'Clothing',
-  'Keys & cards',
-  'Other'
-];
+const categories = CAMPUS_CATEGORIES;
 
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
@@ -29,7 +22,7 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
   const inputRef = useRef<HTMLInputElement>(null);
   const [fields, setFields] = useState({
     title: '',
-    category: 'Electronics',
+    category: CAMPUS_CATEGORIES[0],
     description: '',
     location: '',
     timestamp: localDateTime(),

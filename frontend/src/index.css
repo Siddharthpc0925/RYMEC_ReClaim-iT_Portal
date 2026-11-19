@@ -475,3 +475,16 @@ input:not([type="checkbox"]):not([type="radio"]) {
   .my-item-row > img { width: 70px; height: 68px; }
   .app-footer { flex-direction: column; }
 }
+
+
+/* Global Select & Option Dropdown Harmonization */
+select, option {
+  background-color: #111a26 !important;
+  color: #edf2f5 !important;
+}
+
+select:focus, option:checked {
+  background-color: #182434 !important;
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  outline: none !important;
+}

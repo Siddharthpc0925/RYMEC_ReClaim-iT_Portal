@@ -52,7 +52,13 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
 
     // Category filter
     if (filters.category !== 'all') {
-      if (item.category !== filters.category) return false;
+      const selected = filters.category.toLowerCase();
+      const itemCat = (item.category || '').toLowerCase();
+      const matchDirect = itemCat === selected;
+      const matchPartial = selected.includes(itemCat) || itemCat.includes(selected);
+      const keywords = selected.split(/[\s,&/]+/).filter(w => w.length > 2);
+      const matchKeyword = keywords.some(k => itemCat.includes(k));
+      if (!matchDirect && !matchPartial && !matchKeyword) return false;
     }
 
     // Location filter

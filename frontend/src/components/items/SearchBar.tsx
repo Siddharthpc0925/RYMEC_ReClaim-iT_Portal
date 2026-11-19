@@ -1,6 +1,6 @@
 import React from 'react';
 import { Filter, Search, X } from 'lucide-react';
-import { Location } from '../../types';
+import { Location, CAMPUS_CATEGORIES } from '../../types';
 
 export interface FilterState {
   query: string;
@@ -17,14 +17,7 @@ interface SearchBarProps {
   locations?: Location[];
 }
 
-const categories = [
-  'Electronics',
-  'School supplies',
-  'Bags & accessories',
-  'Clothing',
-  'Keys & cards',
-  'Other'
-];
+const categories = CAMPUS_CATEGORIES;
 
 export const SearchBar: React.FC<SearchBarProps> = ({ filters, onChange, locations = [] }) => {
   const set = (key: keyof FilterState, value: any) => onChange({ ...filters, [key]: value });

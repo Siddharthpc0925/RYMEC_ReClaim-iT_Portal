@@ -3,6 +3,20 @@ export type ItemStatus = 'OPEN' | 'MATCHED' | 'CLAIMED' | 'RETURNED' | 'ARCHIVED
 export type ClaimStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type UserRole = 'STUDENT' | 'ADMIN';
 
+export const CAMPUS_CATEGORIES = [
+  'Electronics & Gadgets',
+  'Phones & Earphones',
+  'Laptops & Chargers',
+  'Calculators & Lab Kit',
+  'ID Cards & Wallets',
+  'Keys & Keychains',
+  'Bags & Backpacks',
+  'Books & Stationery',
+  'Bottles & Lunchboxes',
+  'Clothing & Umbrella',
+  'Other'
+];
+
 export interface User {
   id: string;
   name: string;

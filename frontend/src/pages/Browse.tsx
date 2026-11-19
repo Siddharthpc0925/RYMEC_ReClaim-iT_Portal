@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, RefreshCw, X, Tag, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Item, Location } from '../types';
+import { Item, Location, CAMPUS_CATEGORIES } from '../types';
 import { api } from '../lib/api';
 import { ItemCard } from '../components/items/ItemCard';
 
@@ -9,10 +9,7 @@ interface BrowseProps {
   initialSearch?: string;
 }
 
-const CATEGORIES = [
-  'All', 'ID card', 'Phone', 'Wallet', 'Keys', 'Bottle', 'Bag', 'Books',
-  'Earphones', 'Laptop', 'Calculator', 'Umbrella', 'Clothing', 'Other'
-];
+const CATEGORIES = ['All', ...CAMPUS_CATEGORIES];
 
 export const Browse: React.FC<BrowseProps> = ({ navigate, initialSearch = '' }) => {
   const [items, setItems] = useState<Item[]>([]);

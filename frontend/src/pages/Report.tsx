@@ -17,7 +17,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../lib/api';
-import { Location, ItemType } from '../types';
+import { Location, ItemType, CAMPUS_CATEGORIES } from '../types';
 import { extractDominantColor } from '../lib/colorExtractor';
 import { parseVoiceTranscript, isSpeechRecognitionSupported } from '../lib/voiceParser';
 import { CampusMapSvg } from '../components/campus/CampusMapSvg';
@@ -28,10 +28,7 @@ interface ReportProps {
   defaultLocationSlug?: string;
 }
 
-const CATEGORIES = [
-  'ID card', 'Phone', 'Wallet', 'Keys', 'Bottle', 'Bag', 'Books',
-  'Earphones', 'Laptop', 'Calculator', 'Umbrella', 'Clothing', 'Other'
-];
+const CATEGORIES = CAMPUS_CATEGORIES;
 
 export const Report: React.FC<ReportProps> = ({
   navigate,
