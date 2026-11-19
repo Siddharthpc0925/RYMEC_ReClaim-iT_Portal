@@ -7,10 +7,10 @@ export const FloatingParticles: React.FC = () => {
   if (shouldReduceMotion) return null;
 
   const particles = [
-    { size: 320, x: '5%', y: '10%', color: 'rgba(5, 150, 105, 0.22)', duration: 24 },
-    { size: 380, x: '80%', y: '8%', color: 'rgba(16, 185, 129, 0.18)', duration: 28 },
-    { size: 300, x: '70%', y: '75%', color: 'rgba(20, 184, 166, 0.18)', duration: 26 },
-    { size: 260, x: '20%', y: '80%', color: 'rgba(245, 158, 11, 0.12)', duration: 22 },
+    { size: 300, x: '5%', y: '10%', color: 'rgba(37, 99, 235, 0.18)', duration: 24 },
+    { size: 360, x: '80%', y: '8%', color: 'rgba(14, 165, 233, 0.15)', duration: 28 },
+    { size: 280, x: '70%', y: '75%', color: 'rgba(99, 102, 241, 0.16)', duration: 26 },
+    { size: 240, x: '20%', y: '80%', color: 'rgba(168, 85, 247, 0.14)', duration: 22 },
   ];
 
   return (

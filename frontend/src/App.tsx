@@ -63,7 +63,6 @@ export const App: React.FC = () => {
   if (pathname === '/report') currentTab = 'report';
   else if (pathname === '/browse' || pathname.startsWith('/items/')) currentTab = 'browse';
   else if (pathname === '/handover') currentTab = 'handover';
-  else if (pathname === '/hotspots') currentTab = 'hotspots';
   else if (pathname === '/about') currentTab = 'about';
   else if (pathname === '/dashboard') currentTab = 'dashboard';
   else if (pathname.startsWith('/admin')) currentTab = 'admin';
@@ -73,7 +72,6 @@ export const App: React.FC = () => {
     else if (tab === 'report') navigate('/report');
     else if (tab === 'browse') navigate('/browse');
     else if (tab === 'handover') navigate('/handover');
-    else if (tab === 'hotspots') navigate('/hotspots');
     else if (tab === 'about') navigate('/about');
     else if (tab === 'dashboard') {
       if (!user) {

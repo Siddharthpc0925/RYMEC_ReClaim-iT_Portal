@@ -16,13 +16,13 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               <img src="/images/vvs-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-bold text-slate-900 dark:text-white text-base">
-              RYMEC <span className="text-brand-accent">ReClaim-iT</span>
+              RYMEC <span className="text-indigo-500">ReClaim-iT</span>
             </span>
           </div>
           <p className="text-xs leading-relaxed">
             Official Campus Lost & Found recovery platform for Rao Bahadur Y. Mahabaleswarappa Engineering College, Ballari. Connecting students, verified handovers, and smart campus matching.
           </p>
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-medium">
+          <div className="flex items-center gap-1.5 text-[11px] text-emerald-500 font-medium">
             <Shield className="w-3.5 h-3.5" />
             <span>Secure Handover & Anti-Fraud Protected</span>
           </div>
@@ -35,22 +35,22 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
           </h4>
           <ul className="space-y-1.5 text-xs">
             <li>
-              <button onClick={() => navigate('/browse')} className="hover:text-emerald-400 transition-colors cursor-pointer">
+              <button onClick={() => navigate('/browse')} className="hover:text-indigo-400 transition-colors">
                 Browse Campus Listings
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/report')} className="hover:text-emerald-400 transition-colors cursor-pointer">
+              <button onClick={() => navigate('/report')} className="hover:text-indigo-400 transition-colors">
                 Report Lost or Found Item
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/handover')} className="hover:text-emerald-400 transition-colors cursor-pointer">
+              <button onClick={() => navigate('/handover')} className="hover:text-indigo-400 transition-colors">
                 Scan Handover QR Code
               </button>
             </li>
             <li>
-              <button onClick={() => navigate('/dashboard')} className="hover:text-emerald-400 transition-colors cursor-pointer">
+              <button onClick={() => navigate('/dashboard')} className="hover:text-indigo-400 transition-colors">
                 My Claims & Watchlist
               </button>
             </li>
@@ -63,19 +63,19 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
             Institutional Redressal
           </h4>
           <ul className="space-y-1.5 text-xs">
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+            <li className="hover:text-sky-400 transition-colors cursor-pointer">
               Campus Security & Custody Desk
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+            <li className="hover:text-sky-400 transition-colors cursor-pointer">
               Student Grievance Redressal Cell (SGRC)
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+            <li className="hover:text-sky-400 transition-colors cursor-pointer">
               Internal Quality Assurance Cell (IQAC)
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+            <li className="hover:text-sky-400 transition-colors cursor-pointer">
               Good Samaritan Citation Scheme
             </li>
-            <li className="hover:text-emerald-400 transition-colors cursor-pointer">
+            <li className="hover:text-sky-400 transition-colors cursor-pointer">
               Anti-Ragging & Campus Safety Desk
             </li>
           </ul>
@@ -91,14 +91,14 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               For direct complaint filing, status inquiries, or urgent committee escalation:
             </p>
             <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-sky-400 block tracking-wider">
                 Direct Grievance Email
               </span>
               <a 
                 href="mailto:rymec.ismart12@gmail.com" 
-                className="font-medium text-white hover:text-emerald-300 transition-colors flex items-center gap-1.5 break-all text-xs"
+                className="font-medium text-white hover:text-sky-300 transition-colors flex items-center gap-1.5 break-all text-xs"
               >
-                <Mail className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <Mail className="h-3.5 w-3.5 text-sky-400 shrink-0" />
                 <span>rymec.ismart12@gmail.com</span>
               </a>
             </div>
@@ -130,7 +130,7 @@ export const Footer: React.FC<FooterProps> = ({ navigate }) => {
               className="inline-flex items-center gap-1 rounded-full bg-white/5 hover:bg-white/15 px-2.5 py-1 text-slate-300 hover:text-white border border-white/10 text-[11px] transition-all"
               title={`${m.name} (@${m.user})`}
             >
-              <span className="text-emerald-400 font-mono text-[10px]">@</span>
+              <span className="text-sky-400 font-mono text-[10px]">@</span>
               <span>{m.user}</span>
             </a>
           ))}
