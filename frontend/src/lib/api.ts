@@ -47,6 +47,7 @@ export const api = {
   verifyOtp: (payload: { email: string; code: string }) => apiRequest('/auth/verify-otp', { method: 'POST', body: JSON.stringify(payload) }),
   resendOtp: (payload: { email: string }) => apiRequest('/auth/resend-otp', { method: 'POST', body: JSON.stringify(payload) }),
   sendLoginOtp: (payload: { identifier: string }) => apiRequest('/auth/send-login-otp', { method: 'POST', body: JSON.stringify(payload) }),
+  getDatabaseUsers: () => apiRequest('/auth/database-users'),
   getMe: () => apiRequest('/auth/me'),
   changePassword: (data: { current_password: string; new_password: string }) =>
     apiRequest('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) }),

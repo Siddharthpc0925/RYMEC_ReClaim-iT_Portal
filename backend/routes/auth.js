@@ -38,13 +38,13 @@ router.post('/register', async (req, res) => {
     const cleanEmail = (email || `${cleanRoll.toLowerCase()}@rymec.edu.in`).trim().toLowerCase();
 
     // Check duplicate roll number
-    const existingRoll = db.profiles.find(p => p.roll_no === cleanRoll);
+    const existingRoll = await db.findUser(cleanRoll);
     if (existingRoll) {
       return res.status(400).json({ error: 'An account with this Roll Number/USN already exists.' });
     }
 
     // Check duplicate email
-    const existingEmail = db.profiles.find(p => p.email === cleanEmail);
+    const existingEmail = await db.findUser(cleanEmail);
     if (existingEmail) {
       return res.status(400).json({ error: 'An account with this email address already exists.' });
     }
@@ -74,7 +74,7 @@ router.post('/register', async (req, res) => {
       created_at: new Date().toISOString()
     };
 
-    db.profiles.push(newUser);
+    await db.saveUserToDatabase(newUser);
 
     db.logUserActivity({
       user_id: newUser.id,
@@ -122,7 +122,7 @@ router.post('/register', async (req, res) => {
 // ──────────────────────────────────────────────────────────────
 // POST /api/auth/verify-otp (Validates OTP & Signs In)
 // ──────────────────────────────────────────────────────────────
-router.post('/verify-otp', (req, res) => {
+router.post('/verify-otp', async (req, res) => {
   try {
     const { email, code } = req.body;
     if (!email || !code) {
@@ -130,7 +130,7 @@ router.post('/verify-otp', (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const user = db.profiles.find(p => p.email.toLowerCase() === cleanEmail);
+    const user = await db.findUser(cleanEmail);
 
     if (!user) {
       return res.status(404).json({ error: 'Account not found with this email.' });
@@ -141,6 +141,7 @@ router.post('/verify-otp', (req, res) => {
     }
 
     // Mark as verified
+    await db.updateUserVerification(user.email, true, null);
     user.is_verified = true;
     user.verification_code = null;
 
@@ -185,13 +186,14 @@ router.post('/resend-otp', async (req, res) => {
     if (!email) return res.status(400).json({ error: 'Email is required.' });
 
     const cleanEmail = email.trim().toLowerCase();
-    const user = db.profiles.find(p => p.email.toLowerCase() === cleanEmail);
+    const user = await db.findUser(cleanEmail);
 
     if (!user) {
       return res.status(404).json({ error: 'Account not found with this email.' });
     }
 
     const newCode = String(Math.floor(100000 + Math.random() * 900000));
+    await db.updateUserVerification(user.email, user.is_verified, newCode);
     user.verification_code = newCode;
 
     let emailResult = { emailSent: false };
@@ -233,15 +235,14 @@ router.post('/send-login-otp', async (req, res) => {
     }
 
     const cleanId = identifier.trim().toLowerCase();
-    const user = db.profiles.find(
-      p => p.email.toLowerCase() === cleanId || p.roll_no.toLowerCase() === cleanId
-    );
+    const user = await db.findUser(cleanId);
 
     if (!user) {
-      return res.status(404).json({ error: 'No account found matching this Email or Roll Number.' });
+      return res.status(404).json({ error: 'No account found matching this Email or Roll Number in institutional database.' });
     }
 
     const loginCode = String(Math.floor(100000 + Math.random() * 900000));
+    await db.updateUserVerification(user.email, user.is_verified, loginCode);
     user.verification_code = loginCode;
 
     let emailResult = { emailSent: false };
@@ -274,9 +275,9 @@ router.post('/send-login-otp', async (req, res) => {
 });
 
 // ──────────────────────────────────────────────────────────────
-// POST /api/auth/login (Standard Password Sign-In)
+// POST /api/auth/login (Standard Password Sign-In with Neon Support)
 // ──────────────────────────────────────────────────────────────
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { identifier, password } = req.body;
 
@@ -285,17 +286,15 @@ router.post('/login', (req, res) => {
     }
 
     const cleanId = identifier.trim().toLowerCase();
-    const user = db.profiles.find(
-      p => p.email.toLowerCase() === cleanId || p.roll_no.toLowerCase() === cleanId
-    );
+    const user = await db.findUser(cleanId);
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials. User not found.' });
+      return res.status(401).json({ error: 'Invalid credentials. User not found in institutional records.' });
     }
 
     const valid = bcrypt.compareSync(password, user.password_hash);
     if (!valid) {
-      return res.status(401).json({ error: 'Invalid password. Please check your credentials.' });
+      return res.status(401).json({ error: 'Invalid password. Please check your password or use "Sign In with Email OTP".' });
     }
 
     if (user.is_verified === false) {
@@ -335,6 +334,27 @@ router.post('/login', (req, res) => {
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Server error during login: ' + err.message });
+  }
+});
+
+// ──────────────────────────────────────────────────────────────
+// GET /api/auth/database-users (All Institutional Database Records)
+// ──────────────────────────────────────────────────────────────
+router.get('/database-users', async (req, res) => {
+  try {
+    const users = await db.getAllDatabaseUsers();
+    const safeUsers = users.map(u => {
+      const copy = { ...u };
+      delete copy.password_hash;
+      delete copy.verification_code;
+      return copy;
+    });
+    return res.json({
+      total: safeUsers.length,
+      users: safeUsers
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to retrieve database users: ' + err.message });
   }
 });
 

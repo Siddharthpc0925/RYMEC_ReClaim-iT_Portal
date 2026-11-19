@@ -51,15 +51,16 @@ const locations = [
   { id: 'loc-10', slug: 'hostel-road', name: 'Hostel Avenue & Gym Block', parent_zone: 'Residential Zone', x: 15.0, y: 85.0 }
 ];
 
-// 2. Profiles (1 Admin Desk, 1 Student Demo)
+// 2. Profiles (Populated with Neon Cloud PostgreSQL Institutional Users)
 const passwordAdmin = hashPassword('Admin@123');
-const passwordStudent = hashPassword('Student@123');
 
-const profiles = [
+const initialNeonUsers = [
   {
     id: 'user-admin',
     name: 'Campus Security Desk',
+    full_name: 'Campus Security Desk',
     roll_no: 'ADM-001',
+    usn_roll: 'ADM-001',
     email: 'admin@college.edu',
     password_hash: passwordAdmin,
     phone: '+91 94480 12345',
@@ -68,23 +69,370 @@ const profiles = [
     fraud_claims: 0,
     flagged: false,
     is_verified: true,
-    created_at: new Date().toISOString()
+    verification_code: null,
+    created_at: '2026-11-01T00:00:00.000Z'
   },
   {
-    id: 'user-1',
-    name: 'Rahul B',
-    roll_no: '3BR21CS089',
-    email: 'rahul.b@rymec.edu.in',
-    password_hash: passwordStudent,
-    phone: '+91 98451 11001',
+    id: '1',
+    name: 'Rahul Sharma',
+    full_name: 'Rahul Sharma',
+    roll_no: '3BR21CS045',
+    usn_roll: '3BR21CS045',
+    email: 'student.rahul@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
     role: 'STUDENT',
-    points: 0,
-    fraud_claims: 0,
-    flagged: false,
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: 'Final Year (2025-2026)',
+    accommodation: 'Aryabhata Block-B Room 304',
     is_verified: true,
-    created_at: new Date().toISOString()
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-01T14:23:47.825Z'
+  },
+  {
+    id: '2',
+    name: 'Prof. Anita Deshmukh',
+    full_name: 'Prof. Anita Deshmukh',
+    roll_no: 'FAC-002',
+    usn_roll: 'FAC-002',
+    email: 'lecturer.anita@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
+    role: 'FACULTY',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    is_verified: true,
+    verification_code: null,
+    points: 20,
+    created_at: '2026-11-01T14:23:48.425Z'
+  },
+  {
+    id: '3',
+    name: 'Dr. Mallikarjun G.',
+    full_name: 'Dr. Mallikarjun G.',
+    roll_no: 'WRD-003',
+    usn_roll: 'WRD-003',
+    email: 'warden.mallikarjun@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
+    role: 'ADMIN',
+    hostel_block: 'Aryabhata Boys Hostel Block-B',
+    accommodation: 'Aryabhata Boys Hostel Block-B',
+    is_verified: true,
+    verification_code: null,
+    points: 20,
+    created_at: '2026-11-01T14:23:49.000Z'
+  },
+  {
+    id: '4',
+    name: 'Dr. Veerendra Kumar',
+    full_name: 'Dr. Veerendra Kumar',
+    roll_no: 'HOD-CSE',
+    usn_roll: 'HOD-CSE',
+    email: 'hod.cse@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
+    role: 'ADMIN',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    is_verified: true,
+    verification_code: null,
+    points: 25,
+    created_at: '2026-11-01T14:23:49.680Z'
+  },
+  {
+    id: '5',
+    name: 'Dr. Priya Kulkarni',
+    full_name: 'Dr. Priya Kulkarni',
+    roll_no: 'MNT-005',
+    usn_roll: 'MNT-005',
+    email: 'mentor.priya@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
+    role: 'FACULTY',
+    department: 'Student Welfare & Mentorship',
+    is_verified: true,
+    verification_code: null,
+    points: 15,
+    created_at: '2026-11-01T14:23:50.245Z'
+  },
+  {
+    id: '6',
+    name: 'Dr. T. Hanumantha Reddy',
+    full_name: 'Dr. T. Hanumantha Reddy',
+    roll_no: 'PRIN-001',
+    usn_roll: 'PRIN-001',
+    email: 'principal@rymec.edu.in',
+    password_hash: '$2a$10$PzOIMn0Nb.pwcG8zh7iuHOg.Nf7YvRd5enolejTnaoPWS.ZQCWTq2',
+    role: 'ADMIN',
+    is_verified: true,
+    verification_code: null,
+    points: 50,
+    created_at: '2026-11-01T14:23:50.990Z'
+  },
+  {
+    id: '7',
+    name: 'V NAGA PHANENDRA',
+    full_name: 'V NAGA PHANENDRA',
+    roll_no: '3VC24CS144',
+    usn_roll: '3VC24CS144',
+    email: 'naga.v.np.vakkalagadda.4532@gmail.com',
+    password_hash: '$2a$10$E1FpxiPIKGgeRRsksNMro.Bl4cbTQwfqXmZw.P4u.sYfnZng.0puS',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'C',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    hostel_block: 'Day Scholar',
+    is_verified: true,
+    verification_code: '196946',
+    points: 10,
+    created_at: '2026-11-10T15:07:37.051Z'
+  },
+  {
+    id: '8',
+    name: 'Vikram Joshi',
+    full_name: 'Vikram Joshi',
+    roll_no: '3BR21CS108',
+    usn_roll: '3BR21CS108',
+    email: 'student.vikram1794669410796@rymec.edu.in',
+    password_hash: '$2a$10$6eqEdqH2zMugidzYgaWaP.RGPY5pO1eTf3AfaOdy/pSnlg3nNFqdq',
+    role: 'STUDENT',
+    department: 'Artificial Intelligence & ML',
+    branch: 'Artificial Intelligence & ML',
+    section: 'A',
+    academic_year: '4th Year',
+    accommodation: 'Aryabhata Block-A',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-14T15:17:14.404Z'
+  },
+  {
+    id: '9',
+    name: 'DEMO',
+    full_name: 'DEMO',
+    roll_no: 'HOD-DEMO1',
+    usn_roll: 'HOD-DEMO1',
+    email: 'steven.steve.rogers.0207@gmail.com',
+    password_hash: '$2a$10$2EVNt4kyUYia6oNbEJZhM.e1b/FuEGQ/xlndqy4/mm08KnxbjTw7y',
+    role: 'ADMIN',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    is_verified: true,
+    verification_code: null,
+    points: 15,
+    created_at: '2026-11-15T07:46:39.706Z'
+  },
+  {
+    id: '10',
+    name: 'DEMO',
+    full_name: 'DEMO',
+    roll_no: 'HOD-DEMO2',
+    usn_roll: 'HOD-DEMO2',
+    email: 'steven.steve.rogers0207@gmail.com',
+    password_hash: '$2a$10$Fr8wPsIUh8ubXHORmN4JYOn4X1fjnmQ0YGFSPUILnCdEQymh9F6K.',
+    role: 'ADMIN',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    is_verified: true,
+    verification_code: null,
+    points: 15,
+    created_at: '2026-11-15T07:48:43.576Z'
+  },
+  {
+    id: '13',
+    name: 'CHINTU',
+    full_name: 'CHINTU',
+    roll_no: 'WRD-CHINTU',
+    usn_roll: 'WRD-CHINTU',
+    email: 'gopalvenu.k06@gmail.com',
+    password_hash: '$2a$10$veJQNjiVvht2YZs/g.o.8ehslCNAFmqAeTA/CXDmeYKb2IA8omXO.',
+    role: 'ADMIN',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    is_verified: false,
+    verification_code: '886750',
+    points: 5,
+    created_at: '2026-11-15T08:44:10.668Z'
+  },
+  {
+    id: '15',
+    name: 'SUMANTH GODINAL',
+    full_name: 'SUMANTH GODINAL',
+    roll_no: '3VC24CS135',
+    usn_roll: '3vc24cs135',
+    email: 'sumanthgodinal369@gmail.com',
+    password_hash: '$2a$10$ZWkO2WQyCWqUHjIti35CYehh37xsLTlN0ASHJV6YI0Pe.V.Xq3gLu',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'C',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-15T08:56:32.587Z'
+  },
+  {
+    id: '16',
+    name: 'Akshay G',
+    full_name: 'Akshay  G',
+    roll_no: '3VC24CS007-OLD',
+    usn_roll: '3vc24cs007',
+    email: 'rymec/akshaygakshay24@gmail.com',
+    password_hash: '$2a$10$FU1W6SZPwP42KMW7m.Ne3uJ.DtGB7gytLGT6b.2Lo/z9YVundT1vy',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'B',
+    academic_year: '3rd Year',
+    is_verified: false,
+    verification_code: '353739',
+    points: 5,
+    created_at: '2026-11-15T12:53:24.523Z'
+  },
+  {
+    id: '17',
+    name: 'Test User',
+    full_name: 'Test User',
+    roll_no: '3BR21CS999',
+    usn_roll: '3BR21CS999',
+    email: 'testuser.demo@gmail.com',
+    password_hash: '$2a$10$qUqx9g/cYt144hlHfyZeaO9UpDcwdGgOLzcqWamrBrs9q/dCUjJaK',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    is_verified: false,
+    verification_code: '478098',
+    points: 5,
+    created_at: '2026-11-15T13:50:13.920Z'
+  },
+  {
+    id: '18',
+    name: 'Rohit Kumar',
+    full_name: 'Rohit Kumar',
+    roll_no: '3VC22CS075',
+    usn_roll: '3VC22CS075',
+    email: 'rohit.student.rymec@gmail.com',
+    password_hash: '$2a$10$5C7DFhIylmYsSTKL6MBJROWZ/O7FzZDiiskaA9t7BH5qJIbycduPu',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    is_verified: false,
+    verification_code: '100558',
+    points: 5,
+    created_at: '2026-11-15T14:15:14.248Z'
+  },
+  {
+    id: '19',
+    name: 'Akshay G',
+    full_name: 'Akshay G',
+    roll_no: '3VC24CS007',
+    usn_roll: '3vc24cs007',
+    email: 'akshaygakshay24@gmail.com',
+    password_hash: '$2a$10$Ss6RLQKsiAIC4igM6flfz.q4ucds6wpXSRnvuEGyiigBDbWpgH7au',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'B',
+    academic_year: '3rd Year',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-16T08:05:00.167Z'
+  },
+  {
+    id: '20',
+    name: 'Shashank c',
+    full_name: 'Shashank c',
+    roll_no: '3VC24IS071',
+    usn_roll: '3vc24is071',
+    email: 'cshashank403@gmail.com',
+    password_hash: '$2a$10$T/muw/oykcXTF./5LCDo9Oylu8xEfXdhbp1BYS9.157OmEKhHW8AO',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-16T13:23:24.703Z'
+  },
+  {
+    id: '21',
+    name: 'Akash',
+    full_name: 'Akash',
+    roll_no: '3VC24CI040',
+    usn_roll: '3VC24CI040',
+    email: 'akashagalur45@gmail.com',
+    password_hash: '$2a$10$ceGS4zdLIGfTbc2zWNmYneeVhL3wJILK0XwS3Tuk5ceGY.6CIUkPO',
+    role: 'STUDENT',
+    department: 'Artificial Intelligence & ML',
+    branch: 'Artificial Intelligence & ML',
+    section: 'A',
+    academic_year: '3rd Year',
+    accommodation: 'PG',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-16T15:20:01.360Z'
+  },
+  {
+    id: '22',
+    name: 'Srujan Gondbal',
+    full_name: 'Srujan Gondbal',
+    roll_no: '3VC24IS077',
+    usn_roll: '3vc24is077 ',
+    email: 'srujangondbal584101@gmail.com',
+    password_hash: '$2a$10$QHOWaqBF5R9.pgeY9Rp4dOGWmAG1jdZKiPxs3l.LVF8J4VrJtzokq',
+    role: 'STUDENT',
+    department: 'Information Science & Engineering',
+    branch: 'Information Science & Engineering',
+    section: 'A',
+    academic_year: '3rd Year',
+    accommodation: 'PG',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-16T15:26:05.116Z'
+  },
+  {
+    id: '23',
+    name: 'VINAY REDDY.B',
+    full_name: 'VINAY REDDY.B',
+    roll_no: '3VC24CS149',
+    usn_roll: '3VC24CS149',
+    email: 'vinaybdh.rymec@gmail.com',
+    password_hash: '$2a$10$ShHSSzRI5jmBUhgguEKMOu6vzGnfOEysr3cV4SgDkNsZfAWIyByAu',
+    role: 'STUDENT',
+    department: 'Computer Science & Engineering',
+    branch: 'Computer Science & Engineering',
+    section: 'C',
+    academic_year: '3rd Year',
+    accommodation: 'Day Scholar',
+    is_verified: true,
+    verification_code: null,
+    points: 10,
+    created_at: '2026-11-17T08:07:30.266Z'
   }
 ];
+
+const profiles = [...initialNeonUsers];
 
 // 3. Badges Initial Table (Clean)
 const badges = [];
@@ -483,8 +831,200 @@ const db = {
       claim,
       pointsAwarded: { finder: 20, claimant: 2 }
     };
+  },
+
+  // Asynchronous Neon Cloud PostgreSQL Integration Helpers
+  async findUser(identifier) {
+    if (!identifier) return null;
+    const clean = identifier.trim().toLowerCase();
+
+    // 1. Try querying Neon Postgres live
+    try {
+      const p = getPool();
+      if (p) {
+        const res = await p.query(
+          'SELECT * FROM public.users WHERE LOWER(TRIM(email)) = $1 OR LOWER(TRIM(usn_roll)) = $1 LIMIT 1',
+          [clean]
+        );
+        if (res.rows.length > 0) {
+          const profile = mapNeonRowToProfile(res.rows[0]);
+          const idx = profiles.findIndex(u => u.id === profile.id || u.email.toLowerCase() === profile.email.toLowerCase());
+          if (idx >= 0) {
+            profiles[idx] = { ...profiles[idx], ...profile };
+            return profiles[idx];
+          } else {
+            profiles.push(profile);
+            return profile;
+          }
+        }
+      }
+    } catch (err) {
+      // Offline or network error: fallback gracefully
+    }
+
+    // 2. Fallback to in-memory profiles (preloaded with all Neon database users)
+    return profiles.find(
+      p => (p.email && p.email.toLowerCase() === clean) ||
+           (p.roll_no && p.roll_no.toLowerCase() === clean) ||
+           (p.usn_roll && p.usn_roll.toLowerCase() === clean)
+    ) || null;
+  },
+
+  async saveUserToDatabase(user) {
+    // 1. Upsert into in-memory profiles immediately
+    const existingIdx = profiles.findIndex(p => p.email.toLowerCase() === user.email.toLowerCase());
+    if (existingIdx >= 0) {
+      profiles[existingIdx] = { ...profiles[existingIdx], ...user };
+    } else {
+      profiles.push(user);
+    }
+
+    // 2. Persist to Neon Postgres
+    try {
+      const p = getPool();
+      if (p) {
+        let dbRole = 'student';
+        const r = (user.role || '').toLowerCase();
+        if (r === 'admin') dbRole = 'principal';
+        else if (r === 'faculty') dbRole = 'lecturer';
+        else if (['student', 'lecturer', 'warden', 'hod', 'mentor', 'principal'].includes(r)) dbRole = r;
+
+        const res = await p.query(
+          `INSERT INTO public.users (
+            full_name, email, password_hash, role, usn_roll, department, branch, section, academic_year, hostel_block, is_verified, verification_code, created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW(), NOW())
+          ON CONFLICT (email) DO UPDATE SET
+            full_name = EXCLUDED.full_name,
+            password_hash = EXCLUDED.password_hash,
+            usn_roll = EXCLUDED.usn_roll,
+            branch = EXCLUDED.branch,
+            is_verified = EXCLUDED.is_verified,
+            verification_code = EXCLUDED.verification_code,
+            updated_at = NOW()
+          RETURNING *`,
+          [
+            user.name || user.full_name,
+            user.email.toLowerCase().trim(),
+            user.password_hash,
+            dbRole,
+            user.roll_no || user.usn_roll,
+            user.department || user.branch || 'Computer Science & Engineering',
+            user.branch || 'Computer Science & Engineering',
+            user.section || 'A',
+            user.academic_year || '3rd Year',
+            user.accommodation || user.hostel_block || 'Day Scholar',
+            Boolean(user.is_verified),
+            user.verification_code || null
+          ]
+        );
+        if (res.rows.length > 0) {
+          const saved = mapNeonRowToProfile(res.rows[0]);
+          user.id = saved.id;
+        }
+      }
+    } catch (err) {
+      console.warn('[DB] Live Neon insert warning:', err.message);
+    }
+    return user;
+  },
+
+  async updateUserVerification(email, isVerified, verificationCode) {
+    const cleanEmail = email.toLowerCase().trim();
+    const user = profiles.find(p => p.email.toLowerCase() === cleanEmail);
+    if (user) {
+      user.is_verified = isVerified;
+      user.verification_code = verificationCode;
+    }
+
+    try {
+      const p = getPool();
+      if (p) {
+        await p.query(
+          'UPDATE public.users SET is_verified = $1, verification_code = $2, updated_at = NOW() WHERE LOWER(TRIM(email)) = $3',
+          [Boolean(isVerified), verificationCode || null, cleanEmail]
+        );
+      }
+    } catch (err) {
+      console.warn('[DB] Update verification in Neon warning:', err.message);
+    }
+    return user;
+  },
+
+  async getAllDatabaseUsers() {
+    try {
+      const p = getPool();
+      if (p) {
+        const res = await p.query(
+          'SELECT id, full_name, email, role, usn_roll, department, branch, section, academic_year, hostel_block, is_verified, created_at FROM public.users ORDER BY id ASC'
+        );
+        if (res.rows.length > 0) {
+          return res.rows.map(mapNeonRowToProfile);
+        }
+      }
+    } catch (err) {
+      console.warn('[DB] getAllDatabaseUsers Neon query warning:', err.message);
+    }
+    return profiles;
   }
 };
+
+const { Pool } = require('pg');
+
+const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp-pooler.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
+
+let pool = null;
+function getPool() {
+  if (!pool) {
+    try {
+      pool = new Pool({
+        connectionString: DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        connectionTimeoutMillis: 5000,
+        idleTimeoutMillis: 10000,
+        max: 5
+      });
+      pool.on('error', (err) => {
+        console.warn('[Postgres Pool Warning]:', err.message);
+      });
+    } catch (e) {
+      console.warn('[Postgres Pool Init Error]:', e.message);
+    }
+  }
+  return pool;
+}
+
+function normalizeRole(role) {
+  const r = (role || '').toLowerCase();
+  if (['admin', 'principal', 'hod', 'warden'].includes(r)) return 'ADMIN';
+  if (['lecturer', 'mentor', 'faculty'].includes(r)) return 'FACULTY';
+  return 'STUDENT';
+}
+
+function mapNeonRowToProfile(row) {
+  return {
+    id: String(row.id),
+    name: row.full_name,
+    full_name: row.full_name,
+    roll_no: (row.usn_roll || (row.email ? row.email.split('@')[0] : `USER-${row.id}`)).trim().toUpperCase(),
+    usn_roll: (row.usn_roll || (row.email ? row.email.split('@')[0] : `USER-${row.id}`)).trim().toUpperCase(),
+    email: (row.email || '').toLowerCase().trim(),
+    password_hash: row.password_hash,
+    phone: row.phone || null,
+    role: normalizeRole(row.role),
+    original_role: row.role,
+    department: row.department,
+    branch: row.branch || row.department || 'Computer Science & Engineering',
+    section: row.section || 'A',
+    academic_year: row.academic_year || '3rd Year',
+    accommodation: row.hostel_block || 'Day Scholar',
+    points: 10,
+    fraud_claims: 0,
+    flagged: false,
+    is_verified: row.is_verified === true || row.is_verified === 'true' || row.is_verified === 1,
+    verification_code: row.verification_code || null,
+    created_at: row.created_at || new Date().toISOString()
+  };
+}
 
 module.exports = {
   db,

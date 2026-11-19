@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { api } from '../../lib/api';
 import { OtpOrbitVerification } from './OtpOrbitVerification';
 
 interface RoundGlassAuthProps {
@@ -112,6 +113,27 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
       } else {
         setError(err.message || 'Invalid credentials. Please verify and try again.');
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 1b. Passwordless Email OTP Login Dispatch
+  const handleSendLoginOtp = async () => {
+    setError(null);
+    if (!loginIdentifier.trim()) {
+      setError('Please enter your College or Personal Email ID / USN above.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await api.sendLoginOtp({ identifier: loginIdentifier.trim() });
+      const targetEmail = res.email || loginIdentifier.trim().toLowerCase();
+      setOtpEmail(targetEmail);
+      setMode('otp');
+      toast(res.message || `A 6-digit login verification code was sent to ${targetEmail}`, 'success');
+    } catch (err: any) {
+      setError(err.message || 'No registered account found with this Email / Roll Number.');
     } finally {
       setLoading(false);
     }
@@ -346,6 +368,22 @@ export const RoundGlassAuth: React.FC<RoundGlassAuthProps> = ({
                   <span>Sign In to Account</span>
                 </>
               )}
+            </button>
+
+            <div className="relative flex py-1 items-center">
+              <div className="flex-grow border-t border-white/10"></div>
+              <span className="flex-shrink mx-3 text-[11px] text-slate-400 uppercase tracking-wider">or sign in with otp</span>
+              <div className="flex-grow border-t border-white/10"></div>
+            </div>
+
+            <button
+              type="button"
+              disabled={loading || !loginIdentifier.trim()}
+              onClick={handleSendLoginOtp}
+              className="w-full py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Send 6-Digit Login OTP to Email</span>
             </button>
           </form>
         ) : (
