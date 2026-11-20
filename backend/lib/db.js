@@ -970,7 +970,7 @@ const db = {
 
 const { Pool } = require('pg');
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_Pfy0XE7TnhMN@ep-raspy-river-ar9edhbp-pooler.c-4.us-west-2.aws.neon.tech/neondb?sslmode=require';
+const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_v6jYWOA8ygeX@ep-floral-resonance-bfbsw5as-pooler.c-5.us-west-2.aws.neon.tech/neondb?sslmode=require';
 
 let pool = null;
 function getPool() {
