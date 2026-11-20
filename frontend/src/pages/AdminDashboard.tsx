@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ShieldAlert,
-  BarChart3,
-  TrendingUp,
-  MapPin,
-  Clock,
-  Users,
-  AlertTriangle,
   RotateCw,
-  Gift,
-  FileCheck,
-  CheckCircle,
-  Flag,
   Printer,
-  Activity,
-  Download,
-  Search,
-  CheckCircle2,
   Shield,
-  Mail,
-  Building2,
-  ChevronRight
+  MapPin
 } from 'lucide-react';
 import {
   BarChart,
@@ -49,27 +32,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [claimsQueue, setClaimsQueue] = useState<any[]>([]);
   const [abuseReports, setAbuseReports] = useState<any[]>([]);
-  const [auditLogs, setAuditLogs] = useState<any[]>([]);
-  const [auditFilter, setAuditFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [runningMaintenance, setRunningMaintenance] = useState(false);
 
   const fetchAdminData = async () => {
     setLoading(true);
     try {
-      const [statsRes, claimsRes, abuseRes, locRes, logsRes] = await Promise.all([
+      const [statsRes, claimsRes, abuseRes, locRes] = await Promise.all([
         api.getAdminStats(),
         api.getAdminClaims(),
         api.getAdminAbuseReports(),
         api.getLocations(),
-        api.getAdminAuditLogs().catch(() => ({ logs: [] })),
       ]);
 
       setStats(statsRes);
       setClaimsQueue(claimsRes.claims || []);
       setAbuseReports(abuseRes.reports || []);
       setLocations(locRes.locations || []);
-      setAuditLogs(logsRes.logs || []);
     } catch (err: any) {
       toast(err.message || 'Error fetching administration records', 'error');
     } finally {
@@ -365,123 +344,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate }) => {
             ))}
           </div>
         )}
-      </div>
-
-      {/* ─── 8. CUSTODY & ACTIVITY AUDIT TRAIL ─── */}
-      <div className="p-5 rounded-2xl border border-white/[0.08] bg-[#0c1421]/80 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 className="font-medium text-xs text-white flex items-center gap-2">
-              <Activity className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Institutional Custody &amp; Activity Audit</span>
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium bg-white/[0.06] text-slate-300">
-                {auditLogs.length} events
-              </span>
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Verified campus activity log with physical zones and security records
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={auditFilter}
-                onChange={(e) => setAuditFilter(e.target.value)}
-                placeholder="Filter by user, action, or zone..."
-                className="pl-8 pr-3 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50"
-              />
-            </div>
-
-            <button
-              onClick={() => {
-                const csvContent = "data:text/csv;charset=utf-8," + 
-                  ["Timestamp,User Name,User Email,Role,Action,Campus Location,Zone,Details"].concat(
-                    auditLogs.map(l => `"${l.timestamp}","${l.user_name}","${l.user_email}","${l.role}","${l.action}","${l.location_name}","${l.campus_zone}","${(l.details || '').replace(/"/g, '""')}"`)
-                  ).join("\n");
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `rymec_activity_audit_${Date.now()}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
-              className="px-3 py-1.5 rounded-lg border border-white/[0.1] bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5 text-slate-400" />
-              <span>Export CSV</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto max-h-96 rounded-lg border border-white/[0.06]">
-          <table className="w-full text-xs text-left">
-            <thead className="text-[11px] font-medium text-slate-400 border-b border-white/[0.06] sticky top-0 bg-[#0c1421] backdrop-blur-md">
-              <tr>
-                <th className="py-2.5 px-3">Timestamp</th>
-                <th className="py-2.5 px-3">User &amp; Role</th>
-                <th className="py-2.5 px-3">Action</th>
-                <th className="py-2.5 px-3">Location</th>
-                <th className="py-2.5 px-3">Campus Zone</th>
-                <th className="py-2.5 px-3">Details</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.04] font-mono text-[11px]">
-              {auditLogs
-                .filter(l => {
-                  if (!auditFilter.trim()) return true;
-                  const q = auditFilter.toLowerCase();
-                  return (
-                    l.user_name?.toLowerCase().includes(q) ||
-                    l.user_email?.toLowerCase().includes(q) ||
-                    l.action?.toLowerCase().includes(q) ||
-                    l.location_name?.toLowerCase().includes(q) ||
-                    l.campus_zone?.toLowerCase().includes(q) ||
-                    l.details?.toLowerCase().includes(q)
-                  );
-                })
-                .map((log) => (
-                  <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="py-2.5 px-3 text-slate-400 tabular-nums whitespace-nowrap">
-                      {new Date(log.timestamp).toLocaleString()}
-                    </td>
-                    <td className="py-2.5 px-3 font-sans">
-                      <div className="font-medium text-white">{log.user_name}</div>
-                      <span className="text-[10px] text-slate-400 block font-mono">{log.user_email}</span>
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-medium inline-block ${
-                        log.action?.includes('HANDOVER') || log.action?.includes('VERIFIED')
-                          ? 'bg-emerald-500/10 text-emerald-400'
-                          : log.action?.includes('REPORT')
-                          ? 'bg-slate-500/10 text-slate-200'
-                          : log.action?.includes('CLAIM')
-                          ? 'bg-slate-500/10 text-slate-300'
-                          : 'bg-white/[0.04] text-slate-400'
-                      }`}>
-                        {log.action}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 text-slate-200 font-sans font-medium flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span>{log.location_name}</span>
-                    </td>
-                    <td className="py-2.5 px-3 text-slate-400 font-sans">
-                      <span className="px-1.5 py-0.5 rounded bg-white/[0.03] text-[10px]">
-                        {log.campus_zone}
-                      </span>
-                    </td>
-                    <td className="py-2.5 px-3 text-slate-300 font-sans text-xs max-w-xs truncate" title={log.details}>
-                      {log.details}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );
