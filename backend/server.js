@@ -59,7 +59,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error. Please try again later.' });
 });
 
-if (require.main === module || !process.env.NETLIFY) {
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log('===================================================================');
     console.log(`🚀 RYMEC ReClaim-iT API Server active on http://localhost:${PORT}`);

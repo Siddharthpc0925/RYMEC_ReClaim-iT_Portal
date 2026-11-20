@@ -22,7 +22,9 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
   const inputRef = useRef<HTMLInputElement>(null);
   const [fields, setFields] = useState({
     title: '',
-    category: CAMPUS_CATEGORIES[0],
+    category: CAMPUS_CATEGORIES[0] || 'Electronics',
+    colour: 'Black',
+    brand: '',
     description: '',
     location: '',
     timestamp: localDateTime(),
@@ -71,7 +73,8 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
 
     if (fields.title.trim().length < 3) nextErrors.title = 'Add an item name (at least 3 characters).';
     if (!fields.category) nextErrors.category = 'Choose an item category.';
-    if (fields.description.trim().length < 8) nextErrors.description = 'Add identifying details (at least 8 characters).';
+    if (!fields.colour.trim()) nextErrors.colour = 'Select or specify the item colour.';
+    if (fields.description.trim().length < 5) nextErrors.description = 'Add identifying details (at least 5 characters).';
     if (!fields.location.trim()) nextErrors.location = 'Add the campus spot where it was last seen or found.';
     if (!fields.timestamp) nextErrors.timestamp = 'Add the approximate date and time.';
 
@@ -84,11 +87,16 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
       await onSubmit({
         title: fields.title.trim(),
         category: fields.category,
+        colour: fields.colour.trim() || 'Black',
+        color: fields.colour.trim() || 'Black',
+        brand: fields.brand.trim() || undefined,
         description: fields.description.trim(),
         location_spot: fields.location.trim(),
+        location_other: fields.location.trim(),
         event_time: fields.timestamp,
+        occurred_at: fields.timestamp,
         type: isFound ? 'FOUND' : 'LOST',
-        image_path: imageUrl,
+        image_path: imageUrl || undefined,
         secret_question: fields.secret_question.trim() || undefined
       });
     } catch (err: any) {
@@ -164,6 +172,48 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
               </select>
             </div>
 
+            {/* Primary Colour */}
+            <div className="form-field">
+              <label>
+                Primary Colour <span className="required">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g. Black, Blue, Silver, White, Red, Grey..."
+                value={fields.colour}
+                onChange={(e) => update('colour', e.target.value)}
+                list="colour-suggestions-list"
+              />
+              <datalist id="colour-suggestions-list">
+                <option value="Black" />
+                <option value="Blue" />
+                <option value="Silver / Grey" />
+                <option value="White" />
+                <option value="Red" />
+                <option value="Brown" />
+                <option value="Green" />
+                <option value="Gold" />
+                <option value="Yellow" />
+                <option value="Other / Multi-colour" />
+              </datalist>
+              {errors.colour && <span className="field-error">{errors.colour}</span>}
+            </div>
+
+            {/* Brand / Make (Optional) */}
+            <div className="form-field">
+              <label>
+                Brand / Manufacturer <span className="field-hint" style={{ display: 'inline', marginLeft: '6px' }}>(Optional)</span>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="e.g. Dell, HP, Apple, Casio, Titan, Wildcraft..."
+                value={fields.brand}
+                onChange={(e) => update('brand', e.target.value)}
+              />
+            </div>
+
             {/* Campus Spot */}
             <div className="form-field">
               <label>
@@ -212,10 +262,14 @@ export const ItemForm: React.FC<ItemFormProps> = ({ kind, onSubmit, locations = 
               </label>
               <textarea
                 className="form-textarea"
-                placeholder="Include color, brand, stickers, unique scratches, or accessories..."
+                rows={4}
+                placeholder="Describe identifying marks: e.g. brand, color, stickers, unique scratches, model, keychain, case cover, or contents inside..."
                 value={fields.description}
                 onChange={(e) => update('description', e.target.value)}
               />
+              <span className="field-hint">
+                Provide distinctive features that make this item uniquely identifiable by campus security or the rightful owner (at least 5 characters).
+              </span>
               {errors.description && <span className="field-error">{errors.description}</span>}
             </div>
 

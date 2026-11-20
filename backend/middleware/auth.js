@@ -12,7 +12,10 @@ function authenticate(req, res, next) {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = db.profiles.find(p => p.id === decoded.id);
+    const user = db.profiles.find(p => 
+      String(p.id) === String(decoded.id) || 
+      (decoded.email && p.email && p.email.toLowerCase() === decoded.email.toLowerCase())
+    );
     if (!user) {
       return res.status(401).json({ error: 'User account not found.' });
     }

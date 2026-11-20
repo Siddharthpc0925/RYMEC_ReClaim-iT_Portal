@@ -15,8 +15,14 @@ export const ReportFound: React.FC<ReportFoundProps> = ({ navigate }) => {
   }, []);
 
   const handleSubmit = async (data: any) => {
-    await api.createItem(data);
-    navigate('/');
+    await api.createItem({
+      ...data,
+      type: 'FOUND',
+      colour: data.colour || data.color || 'Not specified',
+      occurred_at: data.occurred_at || data.event_time,
+      location_other: data.location_other || data.location_spot
+    });
+    navigate('/my-items');
   };
 
   return <ItemForm kind="found" onSubmit={handleSubmit} locations={locations} />;

@@ -965,6 +965,53 @@ const db = {
       console.warn('[DB] getAllDatabaseUsers Neon query warning:', err.message);
     }
     return profiles;
+  },
+
+  async saveItemToDatabase(item) {
+    try {
+      const p = getPool();
+      if (p) {
+        const dateLostFound = item.occurred_at ? new Date(item.occurred_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+        await p.query(
+          `INSERT INTO public.items (
+            id, type, title, category, description, location_id, location_other,
+            date_lost_found, primary_color, brand, status, is_high_value,
+            is_sensitive, id_roll_no, verify_question, verify_answer_hash,
+            images, user_id, created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW(), NOW())
+          ON CONFLICT (id) DO UPDATE SET
+            title = EXCLUDED.title,
+            category = EXCLUDED.category,
+            description = EXCLUDED.description,
+            primary_color = EXCLUDED.primary_color,
+            status = EXCLUDED.status,
+            updated_at = NOW()`,
+          [
+            item.id,
+            item.type,
+            item.title,
+            item.category,
+            item.description,
+            item.location_id || null,
+            item.location_other || null,
+            dateLostFound,
+            item.colour || item.color || 'Unspecified',
+            item.brand || null,
+            item.status || 'OPEN',
+            Boolean(item.is_high_value),
+            Boolean(item.is_sensitive),
+            item.id_roll_no || null,
+            item.verify_question || null,
+            item.verify_answer_hash || null,
+            JSON.stringify(item.image_path ? [item.image_path] : []),
+            String(item.user_id),
+          ]
+        );
+      }
+    } catch (err) {
+      console.warn('[DB] Live Neon item insert warning:', err.message);
+    }
+    return item;
   }
 };
 

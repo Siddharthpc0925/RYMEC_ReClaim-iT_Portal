@@ -141,28 +141,39 @@ router.get('/:id', optionalAuthenticate, (req, res) => {
 });
 
 // POST /api/items (C2 Report Form)
-router.post('/', authenticate, (req, res) => {
-  const {
+router.post('/', authenticate, async (req, res) => {
+  let {
     type,
     title,
     category,
     description,
     colour,
+    color,
     brand,
     location_id,
     location_other,
+    location_spot,
     occurred_at,
+    event_time,
+    timestamp,
     image_path,
     held_at,
     verify_question,
     verify_answer,
+    secret_question,
     is_anonymous,
     id_roll_no
   } = req.body;
 
-  // Validation (TC02)
-  if (!type || !title || !category || !description || !colour || !occurred_at) {
-    return res.status(400).json({ error: 'Please provide all mandatory fields (type, title, category, description, colour, date/time).' });
+  // Harmonize synonyms & field names between forms
+  const resolvedColour = (colour || color || 'Not specified').trim();
+  const resolvedOccurredAt = occurred_at || event_time || timestamp || new Date().toISOString();
+  const resolvedLocationOther = (location_other || location_spot || req.body.location || '').trim();
+  const resolvedVerifyQuestion = (verify_question || secret_question || '').trim() || null;
+
+  // Validation: Ensure mandatory core fields are present
+  if (!type || !title || !category || !description) {
+    return res.status(400).json({ error: 'Please provide all mandatory fields (type, title, category, description).' });
   }
 
   // Rate Limiting (U15)
@@ -217,14 +228,14 @@ router.post('/', authenticate, (req, res) => {
     title: title.trim(),
     category: category.trim(),
     description: description.trim(),
-    colour: colour.trim(),
+    colour: resolvedColour,
     brand: brand ? brand.trim() : null,
     location_id: location_id || null,
-    location_other: location_other ? location_other.trim() : null,
-    occurred_at: new Date(occurred_at).toISOString(),
+    location_other: resolvedLocationOther || null,
+    occurred_at: new Date(resolvedOccurredAt).toISOString(),
     image_path: image_path || (type === 'LOST' ? '/images/rymec-building.png' : '/images/rymec-campus.png'),
     held_at: type === 'FOUND' ? (held_at || 'With me') : null,
-    verify_question: type === 'FOUND' ? (verify_question ? verify_question.trim() : null) : null,
+    verify_question: type === 'FOUND' ? resolvedVerifyQuestion : null,
     verify_answer_hash: type === 'FOUND' && verify_answer ? sha256(verify_answer) : null,
     is_anonymous: Boolean(is_anonymous),
     is_private: isPrivate,
@@ -235,6 +246,11 @@ router.post('/', authenticate, (req, res) => {
   };
 
   db.items.unshift(newItem);
+
+  // Persist to Neon Postgres items table
+  if (typeof db.saveItemToDatabase === 'function') {
+    db.saveItemToDatabase(newItem).catch(err => console.warn('[DB] Item DB persist warning:', err.message));
+  }
 
   const locObj = db.locations.find(l => l.id === location_id);
   const locName = locObj ? locObj.name : (location_other || 'Campus Grounds');
