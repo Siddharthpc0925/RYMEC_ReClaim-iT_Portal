@@ -28,7 +28,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, navigate, onOpenA
     { to: '/', label: 'Explore board', icon: Compass },
     { to: '/my-items', label: 'My items', icon: Archive, requiresAuth: true },
     { to: '/handover', label: 'Handover desk', icon: QrCode },
-    { to: '/hotspots', label: 'Campus grid', icon: MapPin },
     { to: '/about', label: 'About RYMEC', icon: Building2 },
   ];
 

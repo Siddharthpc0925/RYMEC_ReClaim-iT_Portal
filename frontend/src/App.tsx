@@ -93,48 +93,7 @@ export const App: React.FC = () => {
   } else if (pathname === '/handover') {
     pageContent = <Handover navigate={navigate} />;
   } else if (pathname === '/hotspots') {
-    pageContent = (
-      <div className="page-wrap space-y-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wider">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Interactive Campus Grid</span>
-          </div>
-          <h1 className="text-3xl font-extrabold text-white">
-            RYMEC Campus Zones &amp; Drop Desks
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300">
-            Official safe handover stations and monitored custody desks across RYMEC Ballari.
-          </p>
-        </div>
-
-        <CampusMapSvg
-          locations={locations}
-          onSelectLocation={(loc) => navigate(`/items?location=${loc.name}`)}
-          isHeatmap={true}
-        />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {locations.map((loc) => (
-            <div
-              key={loc.id}
-              onClick={() => navigate(`/items?location=${loc.name}`)}
-              className="surface-card p-4 rounded-2xl cursor-pointer hover:border-emerald-400/50 transition-all flex items-center justify-between group"
-            >
-              <div>
-                <h4 className="font-bold text-white text-sm group-hover:text-emerald-300 transition-colors">
-                  {loc.name}
-                </h4>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Zone: {loc.parent_zone || 'Campus Core'}
-                </p>
-              </div>
-              <Navigation className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    pageContent = <Home navigate={navigate} />;
   } else if (pathname === '/about') {
     pageContent = <AboutCollege />;
   } else if (pathname === '/certificate') {
