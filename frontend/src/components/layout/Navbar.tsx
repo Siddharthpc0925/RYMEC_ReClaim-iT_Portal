@@ -62,46 +62,46 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, onOpe
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/12 bg-navy-950/70 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.35)] no-print">
+    <header className="sticky top-0 z-40 w-full border-b border-[rgba(240,246,252,0.08)] bg-[#0d1117]/95 backdrop-blur-md no-print">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         
         {/* Brand Header */}
         <div 
           onClick={() => setCurrentTab('home')}
-          className="group flex cursor-pointer items-center gap-3 transition-transform hover:opacity-95"
+          className="group flex cursor-pointer items-center gap-3 transition-opacity hover:opacity-90"
         >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 shadow-sm overflow-hidden p-0.5 backdrop-blur-md shrink-0">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-[#161b22] border border-[rgba(240,246,252,0.08)] overflow-hidden p-0.5 shrink-0">
             <img 
               src="/images/vvs-logo.jpg" 
               alt="RYMEC VVS Emblem" 
-              className="h-full w-full object-contain rounded-lg"
+              className="h-full w-full object-contain rounded-md"
             />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-wider bg-gradient-to-r from-white via-emerald-100 to-teal-200 bg-clip-text text-transparent">
-                RYMEC <span className="text-brand-accent">ReClaim-iT</span>
+              <span className="font-semibold text-base text-[#f0f6fc]">
+                RYMEC <span className="text-emerald-400">ReClaim-iT</span>
               </span>
-              <span className="rounded-full bg-amber-400/15 border border-amber-300/30 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow-sm">
+              <span className="rounded-md bg-amber-400/10 border border-amber-300/20 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">
                 NAAC A+
               </span>
             </div>
-            <p className="text-[11px] font-medium tracking-tight text-slate-300/90 line-clamp-1">
+            <p className="text-[11px] font-normal text-slate-400 line-clamp-1">
               Rao Bahadur Y. Mahabaleswarappa Engineering College
             </p>
           </div>
         </div>
 
         {/* Desktop Quick Links */}
-        <nav className="hidden lg:flex items-center gap-1 rounded-full border border-white/18 bg-white/5 p-1 backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+        <nav className="hidden lg:flex items-center gap-1 rounded-lg border border-[rgba(240,246,252,0.08)] bg-[#161b22] p-1">
           {navItems.map(item => (
             <button
               key={item.id}
               onClick={() => setCurrentTab(item.id)}
-              className={`relative rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                 currentTab === item.id 
-                  ? 'text-white ios-glass-btn-primary shadow-sm' 
-                  : 'text-silver-300 hover:text-white'
+                  ? 'bg-[#21262d] text-[#f0f6fc] border border-[rgba(240,246,252,0.08)]' 
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               <span>{item.label}</span>

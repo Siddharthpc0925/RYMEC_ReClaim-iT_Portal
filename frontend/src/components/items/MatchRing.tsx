@@ -45,7 +45,7 @@ export const MatchRing: React.FC<MatchRingProps> = ({
           className="transition-all duration-1000 ease-out"
         />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center text-xs font-black tracking-tight" style={{ color }}>
+      <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold font-mono tabular-nums" style={{ color }}>
         {score}%
       </div>
     </div>

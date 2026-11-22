@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, PackageCheck, Search, Sparkles, ShieldCheck } from 'lucide-react';
+import { ArrowUpRight, PackageCheck, Search, ShieldCheck, Compass } from 'lucide-react';
 import { ItemCard, StatusPill } from '../components/items/ItemCard';
 import { SearchBar, FilterState } from '../components/items/SearchBar';
 import { api } from '../lib/api';
@@ -107,13 +107,13 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
       {/* ── Reference Home Hero ── */}
       <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow">RYMEC lost &amp; found · live board</p>
+          <p className="eyebrow">Institutional Lost &amp; Found Registry · Ballari</p>
           <h1>
-            Search campus.<br />
-            <span>Skip the group-chat scroll.</span>
+            Search campus lost &amp; found.<br />
+            <span>Direct recovery across RYMEC Ballari.</span>
           </h1>
           <p className="lead">
-            Lost something between classes at RYMEC? Found a small piece of somebody’s day? Put it on the board and help it find its way back.
+            Report misplaced personal property or check custody safe drop desks at RYMEC. Automated match engine pairs corresponding reports.
           </p>
           <div className="hero-actions">
             <button
@@ -122,7 +122,7 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
               onClick={() => navigate('/report-lost')}
             >
               <Search size={15} />
-              <span>I lost something</span>
+              <span>Report lost item</span>
             </button>
             <button
               className="button"
@@ -130,18 +130,22 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
               onClick={() => navigate('/report-found')}
             >
               <PackageCheck size={15} />
-              <span>I found something</span>
+              <span>Report found item</span>
             </button>
           </div>
         </div>
 
         <div className="hero-art" aria-label={`${activeReports} active reports on the RYMEC campus board`}>
-          <span className="hero-count">
-            <span className="footer-signal" />
-            Campus board · RYMEC live
-          </span>
-          <strong>{activeReports} active reports</strong>
-          <span>{foundCount} found · {lostCount} still looking</span>
+          <div className="hero-count">
+            <span className="status-dot" style={{ background: '#10b981' }} />
+            <span>Active registry status</span>
+          </div>
+          <div>
+            <strong>{activeReports} reports</strong>
+            <p style={{ margin: '4px 0 0', color: 'var(--muted)', fontSize: '13px' }}>
+              {foundCount} found items in custody · {lostCount} open searches
+            </p>
+          </div>
         </div>
       </section>
 
@@ -149,8 +153,8 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
       <section aria-labelledby="board-title">
         <div className="section-heading">
           <div>
-            <h2 id="board-title">Around campus</h2>
-            <p>Reports shared by RYMEC students &amp; faculty, sorted by newest first.</p>
+            <h2 id="board-title">Campus item directory</h2>
+            <p>Verified institutional reports ordered by latest submission.</p>
           </div>
           <span className="status-pill status-active">
             <span className="status-dot" />
@@ -169,10 +173,10 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
             <div className="result-caption">
               <span>
                 {loading
-                  ? 'Looking through the board…'
-                  : `${filteredItems.length} ${filteredItems.length === 1 ? 'report' : 'reports'} found`}
+                  ? 'Accessing registry...'
+                  : `${filteredItems.length} ${filteredItems.length === 1 ? 'report' : 'reports'} listed`}
               </span>
-              <span>Photos when available + details · Ballari Campus</span>
+              <span>Ballari Campus · Zone verified</span>
             </div>
 
             <div className="feed-list">
@@ -188,16 +192,16 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
               {!loading && filteredItems.length === 0 && (
                 <div className="empty-state">
                   <div className="empty-icon">
-                    <Search size={21} />
+                    <Search size={20} />
                   </div>
-                  <h3>No reports match those filters</h3>
-                  <p>Try another keyword, clear campus spot filters, or check all categories.</p>
+                  <h3>No matching reports found</h3>
+                  <p>Try modifying your search keywords or resetting filters.</p>
                   <button
                     className="button button-small"
                     type="button"
                     onClick={() => setFilters(DEFAULT_FILTERS)}
                   >
-                    Clear search
+                    Reset filters
                   </button>
                 </div>
               )}
@@ -208,45 +212,45 @@ export const Home: React.FC<HomeProps> = ({ navigate }) => {
           <aside className="feed-aside" aria-label="Board information">
             <section className="surface-card match-note">
               <div className="match-note-top">
-                <span className="match-mode">Match hints</span>
-                <Sparkles size={16} />
+                <span className="match-mode">Algorithmic matching</span>
+                <Compass size={16} />
               </div>
-              <h3>Lookalikes, surfaced.</h3>
+              <h3>Explainable match engine</h3>
               <p>
-                RYMEC ReClaim-iT compares item details, colors, campus spots, and images to suggest reports that might be connected.
+                Calculates similarity across item category, primary color, campus zones, and timestamps to pair corresponding notices.
               </p>
               <button
                 className="button button-small button-block"
                 type="button"
                 onClick={() => navigate('/report-lost')}
               >
-                <span>Add a lost-item report</span>
+                <span>Report lost item</span>
                 <ArrowUpRight size={13} />
               </button>
             </section>
 
             <div className="stat-strip" aria-label="Campus board counts">
               <div className="stat-row">
-                <span>Found and waiting</span>
+                <span>Items in custody</span>
                 <strong>{foundCount}</strong>
               </div>
               <div className="stat-row">
-                <span>Still looking</span>
+                <span>Open searches</span>
                 <strong>{lostCount}</strong>
               </div>
               <div className="stat-row">
                 <span>Handover desks</span>
-                <strong>4 Kiosks</strong>
+                <strong>4 safe kiosks</strong>
               </div>
             </div>
 
             <div className="surface-card" style={{ padding: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <ShieldCheck size={16} className="text-emerald-400" />
-                <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 700 }}>Safe Handover Desks</h4>
+                <h4 style={{ margin: 0, fontSize: '13px', fontWeight: 600 }}>Safe Handover Desks</h4>
               </div>
-              <p style={{ margin: 0, fontSize: '11px', color: 'var(--muted)', lineHeight: '1.5' }}>
-                Drop items at Main Gate Security, Central Library Desk, or Admin Reception for 24/7 safe custody.
+              <p style={{ margin: 0, fontSize: '12px', color: 'var(--muted)', lineHeight: '1.5' }}>
+                Custody drop locations at Main Gate Security, Central Library Desk, and Administrative Block.
               </p>
             </div>
           </aside>

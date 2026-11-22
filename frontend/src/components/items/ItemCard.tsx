@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock3, MapPin } from 'lucide-react';
+import { Clock3, MapPin, Smartphone, KeyRound, Briefcase, Package } from 'lucide-react';
 import { Item } from '../../types';
 
 function relativeTime(value: string | number | Date | undefined): string {
@@ -45,7 +45,7 @@ interface ItemCardProps {
 
 export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
   const isFound = item.type === 'FOUND';
-  const locationText = item.location_name || item.location_spot || (typeof item.location === 'string' ? item.location : 'Campus Core');
+  const locationText = item.location_name || item.location_spot || (typeof item.location === 'string' ? item.location : 'Campus Grounds');
 
   return (
     <article className="item-card" onClick={onClick} style={{ cursor: 'pointer' }}>
@@ -62,11 +62,19 @@ export const ItemCard: React.FC<ItemCardProps> = ({ item, onClick }) => {
             />
           ) : (
             <div className="image-fallback" aria-hidden="true">
-              {item.category === 'Electronics' ? '📱' : item.category === 'Keys & cards' ? '🔑' : item.category === 'Bags & accessories' ? '🎒' : '◈'}
+              {item.category === 'Electronics' ? (
+                <Smartphone size={24} />
+              ) : item.category === 'Keys & cards' || item.category === 'ID card' ? (
+                <KeyRound size={24} />
+              ) : item.category === 'Bags & accessories' ? (
+                <Briefcase size={24} />
+              ) : (
+                <Package size={24} />
+              )}
             </div>
           )}
           <span className="image-type">
-            {isFound ? 'Campus find' : 'Looking for'}
+            {isFound ? 'Found' : 'Lost'}
           </span>
         </div>
 

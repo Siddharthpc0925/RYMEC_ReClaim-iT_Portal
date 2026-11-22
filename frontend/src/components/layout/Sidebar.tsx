@@ -123,14 +123,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, navigate, onOpenA
         <div className="space-y-1 mb-2">
           <div 
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 p-2 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200 cursor-pointer hover:bg-white/10 transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg bg-[#161b22] border border-[rgba(240,246,252,0.08)] text-xs text-slate-200 cursor-pointer hover:bg-[#21262d] transition-colors"
           >
-            <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px] uppercase">
+            <div className="w-6 h-6 rounded-md bg-emerald-500/15 text-emerald-400 font-medium flex items-center justify-center text-[11px] uppercase">
               {user.name.charAt(0)}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="font-semibold truncate leading-tight">{user.name.split(' ')[0]}</div>
-              <div className="text-[10px] text-amber-300 font-mono">★ {user.points || 0} pts</div>
+              <div className="font-medium truncate leading-tight">{user.name.split(' ')[0]}</div>
+              <div className="text-[10px] text-slate-400 font-mono tabular-nums">{user.points || 0} pts</div>
             </div>
           </div>
 
@@ -156,10 +156,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, navigate, onOpenA
 
       {/* Sidebar information tip */}
       <div className="sidebar-note">
-        <Sparkles size={15} />
+        <ShieldCheck size={15} />
         <span>
-          <strong>Photo-match hints</strong>
-          AI matching uses pHash + colour + text signals across RYMEC campus.
+          <strong>Campus custody security</strong>
+          Handover verification via 6-digit code at safe drop kiosks.
         </span>
       </div>
     </aside>
