@@ -3,6 +3,8 @@
 > **Rao Bahadur Y. Mahabaleswarappa Engineering College (RYMEC), Ballari**  
 > *Affiliated to Visvesvaraya Technological University (VTU), Belagavi | Approved by AICTE, New Delhi | Accredited by NAAC with 'A+' Grade*
 
+https://rymec-reclaim-it.netlify.app
+
 ---
 
 ## 🌐 Live Production Website
