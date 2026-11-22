@@ -30,6 +30,143 @@ On most college campuses, lost phones, student ID cards, wallets, and calculator
 
 ---
 
+## 📐 System Architecture & Workflow Block Diagrams
+
+### 1. High-Level System Architecture Block Diagram
+```mermaid
+flowchart TD
+    subgraph ClientLayer["🖥️ Frontend Client Tier (Single Page Application)"]
+        UI["React 18 + Vite + TypeScript"]
+        LG["Liquid Glass iOS Theme Engine"]
+        MAP["Interactive Campus SVG Map"]
+        AUDIO["Voice Report & Canvas Color Extractor"]
+    end
+
+    subgraph SecurityGateway["🛡️ Network & Ingestion Boundary"]
+        NETLIFY["Netlify Cloud CDN & Serverless Edge Functions"]
+        JWT_AUTH["JWT Authentication & Institutional Role Guard"]
+        RATE["Rate Limiter & Duplicate Guard (U15 Similarity)"]
+    end
+
+    subgraph BackendAPI["⚡ Backend Core API Tier (Node.js / Express Engine)"]
+        API["REST Controllers (/api/items, /api/claims, /api/auth)"]
+        MATCH["Explainable Match Engine (U1 Scoring & Reasons)"]
+        CHALLENGE["Hidden-Detail Challenge & Levenshtein Evaluator"]
+        OTP_GEN["Cryptographic 6-Digit Handover Code Generator"]
+    end
+
+    subgraph ExternalServices["☁️ External Cloud Services & Gateways"]
+        NEON[("Dedicated Neon PostgreSQL DB\nProject: silent-sunset-23677986")]
+        SMTP["RYMEC-iSMART Gmail Gateway\n(rymec.ismart12@gmail.com)"]
+    end
+
+    ClientLayer -->|HTTPS / REST Requests| NETLIFY
+    NETLIFY --> SecurityGateway
+    SecurityGateway --> BackendAPI
+    BackendAPI <-->|Pooled SQL Queries| NEON
+    BackendAPI -->|Real-Time OTP & Alerts| SMTP
+```
+
+---
+
+### 2. End-to-End Item Lifecycle & Secure Handover Block Diagram
+```mermaid
+flowchart LR
+    A["👤 Student / Finder<br>Reports Item (Lost / Found)"] --> B["🔍 Duplicate & Fraud Guard<br>(U15 Similarity Check)"]
+    B --> C["⚡ Explainable Match Engine<br>(Score >= 50% Threshold)"]
+    C -->|Auto-Pairing| D["🔔 Real-Time Match Alerts<br>(Email & In-App Notification)"]
+    D --> E["🔐 Ownership Verification<br>(Hidden Challenge Question)"]
+    E -->|Answer Verified| F["🔑 6-Digit Handover Code<br>(SHA-256 Hashed & Timestamped)"]
+    F --> G["🏢 Physical Exchange<br>(Security Kiosk / Safe Drop Desk)"]
+    G --> H["✅ Handover Confirmed<br>(Status: RETURNED)"]
+    H --> I["🏆 Citation & Trust Points<br>(+20 Points & Badge Awarded)"]
+```
+
+---
+
+### 3. Institutional ID-Card Instant Notification & Privacy Block Diagram
+```mermaid
+flowchart TD
+    subgraph FoundFlow["Found ID-Card Ingestion"]
+        F1["Finder enters Found Item: Category = 'ID card'"] --> F2["Target USN / Roll No Extracted"]
+        F2 --> F3{"Student Profile Exists in Neon DB?"}
+    end
+
+    subgraph PrivacyAction["Privacy & Concealment Engine (U2)"]
+        F3 -->|Yes| P1["Mark Report as PRIVATE<br>(Hidden from Public Directory & Search)"]
+        F3 -->|No| P2["Route to Campus Security Desk for Safe Custody"]
+        P1 --> P3["Instant Private Notification dispatched to Student"]
+        P3 --> P4["Private Direct Claim Route Generated"]
+    end
+
+    subgraph Resolution["Direct Student Retrieval"]
+        P4 --> R1["Student Enters Secret Proof / Handover PIN"]
+        R1 --> R2["Direct Handover without Public Exposure of USN/Name"]
+    end
+```
+
+---
+
+### 4. Database Entity-Relationship Block Diagram
+```mermaid
+erDiagram
+    USERS ||--o{ ITEMS : "reports"
+    USERS ||--o{ CLAIMS : "submits"
+    USERS ||--o{ ABUSE_REPORTS : "flags"
+    ITEMS ||--o{ CLAIMS : "claimed_in"
+    ITEMS ||--o{ ABUSE_REPORTS : "reported_for"
+
+    USERS {
+        int id PK
+        string full_name
+        string email UK
+        string role "STUDENT / FACULTY / ADMIN"
+        string usn_roll UK
+        string department
+        string branch
+        boolean is_verified
+        int points
+    }
+
+    ITEMS {
+        string id PK
+        string user_id FK
+        string type "LOST / FOUND"
+        string title
+        string category
+        text description
+        string primary_color
+        string brand
+        string location_other
+        date date_lost_found
+        string verify_question
+        string verify_answer_hash
+        boolean is_private
+        string status "OPEN / CLAIMED / RETURNED"
+    }
+
+    CLAIMS {
+        string id PK
+        string item_id FK
+        string claimant_id FK
+        string answer
+        string status "PENDING / APPROVED / REJECTED"
+        string handover_code_hash
+        timestamp created_at
+    }
+
+    ABUSE_REPORTS {
+        int id PK
+        string item_id FK
+        string reporter_id FK
+        text reason
+        string status "OPEN / RESOLVED"
+        timestamp created_at
+    }
+```
+
+---
+
 ## 💎 Liquid Glass iOS Design System
 The entire portal is built with an Apple-like Liquid Glass interface:
 - **Translucent Refractive Layers**: `backdrop-filter: blur(24px) saturate(180%) brightness(1.05)` with specular borders and inner highlights.
